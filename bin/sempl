@@ -44,8 +44,8 @@ if ($src =~ /\Q$ENV{SEMPL_OPEN}\E(.+?)\Q$ENV{SEMPL_CLOSE}\E/) {
 #
 # tokenize and process escape sequences and params as they're encountered
 
-
 # process the input
+# TODO: process frontmatter, attach shell pipe, and process body in separate steps
 my $frontmatter = 0;
 my $out;
 while (my $line = <$in>) {

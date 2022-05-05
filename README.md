@@ -118,7 +118,10 @@ Quotes in quoted strings can be escaped in a way that the shell will understand.
 
     var3='escaped quotes aren'\''t pretty, but they'\''re possible'
 
+<!--
 ## Loop: {<param} {N,N:,N:M,:M,...} {;<}
+
+TODO: Implement this
 
 {<param} begins reading from {param},
 but produces no output by itself.
@@ -133,14 +136,16 @@ Multiple field ranges can be expanded using commas.
 For example, {-3,5,7-} would expand to the first through third,
 fifth, and seventh through last fields.
 
+## Running Sempl
+
 ## Nesting
 
 ## Joins
 
 TODO: explore different kinds of join-like expressions
 
-## Full Examples
+## Examples
+-->
 
-## Real World Examples
-
-# vim: ft=markdown
+<!-- vim: ft=markdown
+-->
