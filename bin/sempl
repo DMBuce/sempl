@@ -105,7 +105,6 @@ while (my $line = <$in>) {
 		if ($char) {
 			$var = $var ? ++$var : 'a';
 			$fstring .= "\"\$$var\"";
-			print STDERR "$char, $param, $var\n";
 			$lvl += $ops->{$char}($char, $param, $var);
 		} elsif ($escape) {
 			$escape = "\n" if $escape eq "n";

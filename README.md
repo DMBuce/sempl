@@ -5,9 +5,6 @@ A simple, line-based template system for the command line.
 Useful for injecting command output, file contents,
 and environment variables into arbitrary text.
 
-Sempl was designed to be simple yet powerful.
-This document was written with it.
-
 ## Comments: {#comment}
 
     Want to know a secret? {#This text won't render}
@@ -89,7 +86,9 @@ To capture stderr, use shell redirection.
 
 ### Stdin: {-}
 
-    $ printf '%s\n' 'green eggs and ham.' 'them, Sam I am.' | sempl <(echo 'I do not like {-}')
+    $ printf '%s\n' 'green eggs and ham.' 'them, Sam I am.' | sempl 'I do not like {-}'
+	I do not like green eggs and ham.
+	I do not like them, Sam I am.
 
 ## Frontmatter: #!sempl
 

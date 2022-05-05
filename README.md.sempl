@@ -27,9 +27,6 @@ A simple, line-based template system for the command line.
 Useful for injecting command output, file contents,
 and environment variables into arbitrary text.
 
-Sempl was designed to be simple yet powerful.
-This document was written with it.
-
 ## Comments: {#comment}
 
     Want to know a secret? {#This text won't render}
