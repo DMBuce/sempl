@@ -140,8 +140,8 @@ sub processenv {
 
 sub processfile {
 	my ($c, $param, $i) = @_;
-	$param =~ s/"/\\"/g;
-	print $out "cat -- \"$c$param\" | while read $i; do\n";
+	$param =~ s/'/'\\''/g;
+	print $out "cat -- '$c$param' | while read $i; do\n";
 	return 1;
 }
 
