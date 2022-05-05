@@ -102,7 +102,7 @@ To capture stderr, use shell redirection.
 
 ### Stdin: {-}
 
-	$ printf '%s\\n' en id ic | sempl 'V{-}i,' | sed '$s/.$/./'
+	$ printf '%s\n' en id ic | sempl 'V{-}i,' | sed '$s/.$/./'
 	<!printf '%s\n' en id ic | SEMPL_CLOSE=} SEMPL_OPEN={ ./bin/sempl 'V{-}i,' | sed '$s/.$/./'>
 
 ## Frontmatter: #!sempl

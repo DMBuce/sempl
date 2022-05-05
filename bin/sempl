@@ -92,11 +92,12 @@ while (my $line = <$in>) {
 	my $fstring = '';
 	my $lvl = 0;
 	chomp $line;
-	while ($line =~ /(\Q$ENV{SEMPL_OPEN}\E(.)(.*?)\Q$ENV{SEMPL_CLOSE}\E|\\(.))/pg) {
+	#while ($line =~ /(\Q$ENV{SEMPL_OPEN}\E(.)(.*?)\Q$ENV{SEMPL_CLOSE}\E|\\(.))/pg) {
+	while ($line =~ /(\Q$ENV{SEMPL_OPEN}\E(.)(.*?)\Q$ENV{SEMPL_CLOSE}\E)/pg) {
 		my $match = $1;
 		my $char = $2;
 		my $param = $3;
-		my $escape = $4;
+		#my $escape = $4;
 		my $text = ${^PREMATCH};
 		#print "$match, $param, $escape, $text\n";
 		my $t = $text;
@@ -106,10 +107,10 @@ while (my $line = <$in>) {
 			$var = $var ? ++$var : 'a';
 			$fstring .= "\"\$$var\"";
 			$lvl += $ops->{$char}($char, $param, $var);
-		} elsif ($escape) {
-			$escape = "\n" if $escape eq "n";
-			$escape = "\t" if $escape eq "t";
-			$fstring .= "'$escape'";
+		#} elsif ($escape) {
+		#	$escape = "\n" if $escape eq "n";
+		#	$escape = "\t" if $escape eq "t";
+		#	$fstring .= "'$escape'";
 		}
 		$line =~ s/^\Q$text$match\E//;
 	}
