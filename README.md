@@ -39,7 +39,7 @@ on my system, renders as
 
     My shell is /bin/bash
 
-### Files: {/file} or {.file} or {~file}
+### Files: {/file} or {.file}
 
 Suppose we have a file in `/tmp` named `hello.txt`
 with the following contents.
@@ -86,9 +86,10 @@ To capture stderr, use shell redirection.
 
 ### Stdin: {-}
 
-    $ printf '%s\n' 'green eggs and ham.' 'them, Sam I am.' | sempl 'I do not like {-}'
-	I do not like green eggs and ham.
-	I do not like them, Sam I am.
+	$ printf '%s\n' en id ic | sempl 'V{-}i,' | sed '$s/.$/./'
+	Veni,
+	Vidi,
+	Vici.
 
 ## Frontmatter: #!sempl
 
