@@ -24,7 +24,7 @@ var3='escaped quotes aren'\\''t pretty, but they'\\''re possible'
 
 # Sempl
 
-A simple, line-based template system for the command line.
+A simple, line-oriented template system for the command line.
 Useful for injecting command output, file contents,
 and environment variables into arbitrary text.
 
