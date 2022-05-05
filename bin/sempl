@@ -99,7 +99,6 @@ while (my $line = <$in>) {
 		my $param = $3;
 		#my $escape = $4;
 		my $text = ${^PREMATCH};
-		#print "$match, $param, $escape, $text\n";
 		my $t = $text;
 		$t =~ s/'/'\\''/g;
 		$fstring .= "'$t'";
@@ -141,13 +140,14 @@ sub processenv {
 
 sub processfile {
 	my ($c, $param, $i) = @_;
+	$param =~ s/"/\\"/g;
 	print $out "cat -- \"$c$param\" | while read $i; do\n";
 	return 1;
 }
 
 sub processcmd {
 	my ($c, $param, $i) = @_;
-	print $out "$param | while read $i; do\n";
+	print $out "( $param ) | while read $i; do\n";
 	return 1;
 }
 
