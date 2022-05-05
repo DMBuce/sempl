@@ -116,8 +116,6 @@ while (my $line = <$in>) {
 	}
 	$line =~ s/'/'\\''/g;
 	$fstring .= "'$line'";
-	#$fstring =~ s/'/'\\''/g;
-	#print $out "printf -- '$fstring'" . 'a'..$var . "\n";
 	my @vars = map "\"\$$_\"", 'a'..$var;
 	print $out "echo $fstring\n";
 	print $out "done\n" for 1..$lvl;
