@@ -102,8 +102,8 @@ To capture stderr, use shell redirection.
 
 ### Stdin: {-}
 
-	$ printf '%s\n' en id ic | sempl 'V{-}i,' | sed '$s/.$/./'
-	<!printf '%s\n' en id ic | SEMPL_CLOSE=} SEMPL_OPEN={ ./bin/sempl 'V{-}i,' | sed '$s/.$/./'>
+	$ echo $'en\nid\nic' | sempl 'V{-}i,'
+	<!echo $'en\nid\nic' | SEMPL_CLOSE=} SEMPL_OPEN={ ./bin/sempl 'V{-}i,'>
 
 ## Frontmatter: #!sempl
 
@@ -151,6 +151,8 @@ Field ranges can be selected using {N-}, {N-M}, and {-M}.
 Multiple field ranges can be expanded using commas.
 For example, {-3,5,7-} would expand to the first through third,
 fifth, and seventh through last fields.
+
+## Line Continuation
 
 ## Running Sempl
 
