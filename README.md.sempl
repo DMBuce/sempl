@@ -3,7 +3,8 @@ SEMPL_OPEN='<'
 SEMPL_CLOSE='>'
 var = value
 var1='value'
-var2='escaped quotes aren'\''t pretty, but they'\''re possible'
+var2='this value'\''s got a quote in the middle'
+var3='escaped quotes aren'\\''t pretty, but they'\\''re possible'
 # other ideas
 #n=$'\n'
 #t=$'\t'
@@ -81,10 +82,8 @@ This also works with relative paths<# starting with `.` and home directories>.
     {.dotfile}
     {./file}
     {./path/to/file}
-<!--
-    {~/path/to/file/in/home}
-    {~user/path/to/file/in/user/home}
--->
+<#    {~/path/to/file/in/home} >
+<#    {~user/path/to/file/in/user/home} >
 
 Note that each line of the file is interpolated into the line in the template.
 All basic parameters -- `{$envvar} {/file} {!command} {-}` --
@@ -129,12 +128,11 @@ you can wrap the value in single quotes.
 Unlike in shell, quotes in the middle of unquoted values are interpreted literally.
 
     var1='<$var1>'
-    var2='this value's got a quote in the middle'
     var2='<$var2>'
 
 Quotes in quoted strings can be escaped in a way that the shell will understand.
 
-    var2='escaped quotes aren'\''t pretty, but they'\''re possible'
+    var3='<$var3>'
 
 ## Loop: {<param} {N,N:,N:M,:M,...} {;<}
 

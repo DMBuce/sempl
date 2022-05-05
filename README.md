@@ -61,10 +61,8 @@ This also works with relative paths.
     {.dotfile}
     {./file}
     {./path/to/file}
-<!--
-    {~/path/to/file/in/home}
-    {~user/path/to/file/in/user/home}
--->
+
+
 
 Note that each line of the file is interpolated into the line in the template.
 All basic parameters -- `{$envvar} {/file} {!command} {-}` --
@@ -115,11 +113,10 @@ Unlike in shell, quotes in the middle of unquoted values are interpreted literal
 
     var1='value'
     var2='this value's got a quote in the middle'
-    var2='escaped quotes aren't pretty, but they're possible'
 
 Quotes in quoted strings can be escaped in a way that the shell will understand.
 
-    var2='escaped quotes aren'\t pretty, but they'\re possible'
+    var3='escaped quotes aren'\''t pretty, but they'\''re possible'
 
 ## Loop: {<param} {N,N:,N:M,:M,...} {;<}
 
