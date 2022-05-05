@@ -1,0 +1,164 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use File::Temp qw/ tempfile /;
+use File::Copy qw/ move /;
+
+# define some vars
+my $prog = (split(/\//, $0))[-1];
+my $usage = "Syntax: $prog [SRC] [DEST]\n";
+my $ops = {
+	'#' => \&processcomment,
+	'$' => \&processenv,
+	'/' => \&processfile,
+	'.' => \&processfile,
+	#'~' => \&processfile,
+	'!' => \&processcmd,
+	'-' => \&processstdin,
+};
+
+# export default env vars
+$ENV{SEMPL_OPEN} ||= "{";
+$ENV{SEMPL_CLOSE} ||= "}";
+
+# parse args
+my $src = shift || "-";
+my $dest = shift || "-";
+
+# open input file
+my $in;
+if ($src =~ /\Q$ENV{SEMPL_OPEN}\E(.+?)\Q$ENV{SEMPL_CLOSE}\E/) {
+	#$src .= "\n" if substr($src,-1) ne "\n";
+	open($in, "<", \$src) or die $!;
+} else {
+	open($in, "<$src") or die $!;
+}
+
+# first, expand flow control parameters
+# then, expand single parameters from innermost to outermost, left to right
+#
+# or, process params as they're encountered,
+# switching between line-based processing and flow control processing as necessary
+#
+# tokenize and process escape sequences and params as they're encountered
+
+
+# process the input
+my $frontmatter = 0;
+my $out;
+while (my $line = <$in>) {
+	# export environment variables in frontmatter
+	if ($. == 1) {
+		if ($line =~ /^#!.*$prog/) {
+			$frontmatter = 1;
+			next;
+		} else {
+			# create pipe attached to sh that we can send our output to
+			open($out, "|-", "/bin/sh") or die "$!";
+			# print all output to dest
+			if ($dest ne "-") {
+				print $out "exec >\"$dest\"\n";
+			}
+		}
+	} elsif ($frontmatter and $line =~ /^#!.*$prog/) {
+		# create pipe attached to sh that we can send our output to
+		open($out, "|-", "/bin/sh") or die "$!";
+		# print all output to dest
+		if ($dest ne "-") {
+			print $out "exec >\"$dest\"\n";
+		}
+
+		$frontmatter = 0;
+		next;
+	} elsif ($frontmatter and $line =~ /^#/) {
+		next;
+	} elsif ($frontmatter and $line =~ /^\s*(.*?)\s*=\s*(.*)\s*$/) {
+		my $key = $1;
+		my $value = $2;
+		if ($value =~ /^'(.*)'$/) {
+			$value = $1;
+			$value =~ s/'\\''/'/g;
+		}
+		$ENV{$key} = $value;
+		next;
+	} elsif ($frontmatter) {
+		warn "Invalid line in frontmatter: \n\t$line\n";
+	}
+
+	# tokenize string and process it
+	my $var = '';
+	my $fstring = '';
+	my $lvl = 0;
+	chomp $line;
+	while ($line =~ /(\Q$ENV{SEMPL_OPEN}\E(.)(.*?)\Q$ENV{SEMPL_CLOSE}\E|\\(.))/pg) {
+		my $match = $1;
+		my $char = $2;
+		my $param = $3;
+		my $escape = $4;
+		my $text = ${^PREMATCH};
+		#print "$match, $param, $escape, $text\n";
+		my $t = $text;
+		$t =~ s/'/'\\''/g;
+		$fstring .= "'$t'";
+		if ($char) {
+			$var = $var ? ++$var : 'a';
+			$fstring .= "\"\$$var\"";
+			print STDERR "$char, $param, $var\n";
+			$lvl += $ops->{$char}($char, $param, $var);
+		} elsif ($escape) {
+			$escape = "\n" if $escape eq "n";
+			$escape = "\t" if $escape eq "t";
+			$fstring .= "'$escape'";
+		}
+		$line =~ s/^\Q$text$match\E//;
+	}
+	$line =~ s/'/'\\''/g;
+	$fstring .= "'$line'";
+	#$fstring =~ s/'/'\\''/g;
+	#print $out "printf -- '$fstring'" . 'a'..$var . "\n";
+	my @vars = map "\"\$$_\"", 'a'..$var;
+	print $out "echo $fstring\n";
+	print $out "done\n" for 1..$lvl;
+}
+
+# close files
+close $out;
+close $in;
+
+## rename temp file
+#move $outfile, $dest if $dest ne "-";
+
+sub processcomment {
+	#my ($c, $param, $i) = @_;
+	return 0;
+}
+
+sub processenv {
+	my ($c, $param, $i) = @_;
+	print $out "echo \"\$$param\" | while read $i; do\n";
+	return 1;
+}
+
+sub processfile {
+	my ($c, $param, $i) = @_;
+	print $out "cat -- \"$c$param\" | while read $i; do\n";
+	return 1;
+}
+
+sub processcmd {
+	my ($c, $param, $i) = @_;
+	print $out "$param | while read $i; do\n";
+	return 1;
+}
+
+sub processstdin {
+	my ($c, $param, $i) = @_;
+	local $/;
+	my $stdin = <STDIN>;
+	$stdin =~ s/'/'\\''/;
+	print $out "echo -n '$stdin' | while read $i; do\n";
+	return 1;
+}
+
