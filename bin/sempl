@@ -88,14 +88,40 @@ do {
 		my $t = $text;
 		$t =~ s/'/'\\''/g;
 		$fstring .= "'$t'";
-		if ($char) {
+		if ($char eq '#') {
+			# do nothing
+		} elsif ($char eq '$') {
 			$var = $var ? ++$var : 'a';
+			print $out "echo \"\$$param\" | while read $var; do\n";
 			$fstring .= "\"\$$var\"";
-			$lvl += $ops->{$char}($char, $param, $var);
+			$lvl++;
+		} elsif ($char eq '/' or $char eq '.') {
+			$var = $var ? ++$var : 'a';
+			$param =~ s/'/'\\''/g;
+			print $out "cat -- '$char$param' | while read $var; do\n";
+			$fstring .= "\"\$$var\"";
+			$lvl++;
+		} elsif ($char eq '!') {
+			$var = $var ? ++$var : 'a';
+			print $out "( $param ) | while read $var; do\n";
+			$fstring .= "\"\$$var\"";
+			$lvl++;
+		} elsif ($char eq '-') {
+			$var = $var ? ++$var : 'a';
+			my $stdin = do { local $/; <STDIN> };
+			$stdin =~ s/'/'\\''/g;
+			print $out "echo -n '$stdin' | while read $var; do\n";
+			$fstring .= "\"\$$var\"";
+			$lvl++;
 		#} elsif ($escape) {
 		#	$escape = "\n" if $escape eq "n";
 		#	$escape = "\t" if $escape eq "t";
 		#	$fstring .= "'$escape'";
+
+		# TODO:
+		# {<param} {N:M} {;}
+		# while read -a $var; do
+		# echo ${i[@]:N-1:M+1-N}
 		}
 		$line =~ s/^\Q$text$match\E//;
 	}
@@ -109,37 +135,4 @@ do {
 # close files
 close $out;
 close $in;
-
-sub processcomment {
-	#my ($c, $param, $i) = @_;
-	return 0;
-}
-
-sub processenv {
-	my ($c, $param, $i) = @_;
-	print $out "echo \"\$$param\" | while read $i; do\n";
-	return 1;
-}
-
-sub processfile {
-	my ($c, $param, $i) = @_;
-	$param =~ s/'/'\\''/g;
-	print $out "cat -- '$c$param' | while read $i; do\n";
-	return 1;
-}
-
-sub processcmd {
-	my ($c, $param, $i) = @_;
-	print $out "( $param ) | while read $i; do\n";
-	return 1;
-}
-
-sub processstdin {
-	my ($c, $param, $i) = @_;
-	local $/;
-	my $stdin = <STDIN>;
-	$stdin =~ s/'/'\\''/;
-	print $out "echo -n '$stdin' | while read $i; do\n";
-	return 1;
-}
 
