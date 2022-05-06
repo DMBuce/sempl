@@ -119,7 +119,7 @@ Quotes in quoted strings can be escaped in a way that the shell will understand.
     var3='escaped quotes aren'\''t pretty, but they'\''re possible'
 
 <!--
-## Loop: {<param} {N,N:,N:M,:M,...} {;<}
+## Loop: {<name param} {<name N,N:,N:M,:M,...} {<name;}
 
 TODO: Implement this
 
@@ -137,6 +137,33 @@ For example, {-3,5,7-} would expand to the first through third,
 fifth, and seventh through last fields.
 
 ## Line Continuation
+
+    ... {!a-very | long --command | pipe-line} {./a/very/long/file/name} {$a_very_long_environment_variable_name}
+
+can be rewritten as
+
+    ... {!a-very | long --command | pipe-line} \
+    {./a/very/long/file/name} \
+    {$a_very_long_environment_variable_name}
+
+A variant form of line continuation
+that preserves newlines
+can be used to treat multiple parameters as being on one line.
+
+    #!/usr/bin/env sempl
+    bar='==='
+    #!end sempl env
+    {!echo -e 'one\ntwo\nthree'}\n\
+    {$bar}
+
+renders as
+
+    one\n\
+    two\n\
+    three\n\
+    ===
+
+
 
 ## Running Sempl
 
