@@ -103,11 +103,11 @@ To capture stderr, use shell redirection.
 ### Stdin: {-}
 
 	$ echo $'en\nid\nic' | sempl 'V{-}i,'
-	<!echo $'en\nid\nic' | SEMPL_CLOSE=} SEMPL_OPEN={ ./bin/sempl 'V{-}i,'>
+	<!echo $'en\nid\nic' | SEMPL_OPEN={ SEMPL_CLOSE=} ./bin/sempl 'V{-}i,'>
 
 ## Frontmatter: #!sempl
 
-Similar to other templating systems,
+Similar to some other templating systems,
 sempl templates can include a front matter at the beginning.
 The front matter's first and last lines must start with `#!` and contain `sempl`.
 Every other line between them either defines an environment variable,

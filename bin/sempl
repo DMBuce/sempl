@@ -27,10 +27,9 @@ my $dest = shift || "-";
 # open input file
 my $in;
 if ($src =~ /\Q$ENV{SEMPL_OPEN}\E(.+?)\Q$ENV{SEMPL_CLOSE}\E/) {
-	#$src .= "\n" if substr($src,-1) ne "\n";
 	open($in, "<", \$src) or die $!;
 } else {
-	open($in, "<$src") or die $!;
+	open($in, "<", $src) or die $!;
 }
 
 # process frontmatter
@@ -39,6 +38,7 @@ if ($line =~ /^#!.*$prog/) {
 	while ($line = <$in>) {
 		# export environment variables in frontmatter
 		if ($line =~ /^#!.*$prog/) {
+			# read first line of body and break loop
 			$line = <$in>;
 			last;
 		} elsif ($line =~ /^#/) {
@@ -61,12 +61,12 @@ if ($line =~ /^#!.*$prog/) {
 # create pipe attached to sh that we can send our output to
 open(my $out, "|-", "/bin/sh") or die "$!";
 
-# print all output to dest
+# send all output to dest
 if ($dest ne "-") {
 	print $out "exec >\"$dest\"\n";
 }
 
-# process the template body
+# process template body
 do {
 	# tokenize string and process it
 	my $var = '';

@@ -91,7 +91,7 @@ To capture stderr, use shell redirection.
 
 ## Frontmatter: #!sempl
 
-Similar to other templating systems,
+Similar to some other templating systems,
 sempl templates can include a front matter at the beginning.
 The front matter's first and last lines must start with `#!` and contain `sempl`.
 Every other line between them either defines an environment variable,
