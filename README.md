@@ -56,7 +56,7 @@ renders as
     ==> Hello world, <==
     ==> how are you? <==
 
-This also works with relative paths.
+This also works with relative paths that start with `.` .
 
     {.dotfile}
     {./file}
