@@ -102,8 +102,8 @@ To capture stderr, use shell redirection.
 
 ### Stdin: {-}
 
-	$ echo $'en\nid\nic' | sempl 'V{-}i,'
-	<!echo $'en\nid\nic' | SEMPL_OPEN={ SEMPL_CLOSE=} ./bin/sempl 'V{-}i,'>
+	$ echo -e 'en\nid\nic' | sempl 'V{-}i,'
+	<!echo -e 'en\nid\nic' | SEMPL_OPEN={ SEMPL_CLOSE=} ./bin/sempl 'V{-}i,'>
 
 ## Frontmatter: #!sempl
 

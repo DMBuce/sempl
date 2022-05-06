@@ -84,7 +84,7 @@ To capture stderr, use shell redirection.
 
 ### Stdin: {-}
 
-	$ echo $'en\nid\nic' | sempl 'V{-}i,'
+	$ echo -e 'en\nid\nic' | sempl 'V{-}i,'
 	Veni,
 	Vidi,
 	Vici,
