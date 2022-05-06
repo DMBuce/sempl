@@ -17,8 +17,9 @@ my $ops = {
 };
 
 # export default env vars
-$ENV{SEMPL_OPEN} ||= "{";
-$ENV{SEMPL_CLOSE} ||= "}";
+$ENV{SEMPL_BRACES} ||= "{";
+my $open  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
+my $close = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
 
 # parse args
 my $src = shift || "-";
@@ -26,7 +27,7 @@ my $dest = shift || "-";
 
 # open input file
 my $in;
-if ($src =~ /\Q$ENV{SEMPL_OPEN}\E(.+?)\Q$ENV{SEMPL_CLOSE}\E/) {
+if ($src =~ /\Q$open\E(.+?)\Q$close\E/) {
 	open($in, "<", \$src) or die $!;
 } else {
 	open($in, "<", $src) or die $!;
@@ -51,6 +52,10 @@ if ($line =~ /^#!.*$prog/) {
 				$value =~ s/'\\''/'/g;
 			}
 			$ENV{$key} = $value;
+			if ($key eq "SEMPL_BRACES") {
+				$open  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
+				$close = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
+			}
 			next;
 		} else {
 			warn "Invalid line in frontmatter: \n\t$line\n";
@@ -73,8 +78,8 @@ do {
 	my $fstring = '';
 	my $lvl = 0;
 	chomp $line;
-	#while ($line =~ /(\Q$ENV{SEMPL_OPEN}\E(.)(.*?)\Q$ENV{SEMPL_CLOSE}\E|\\(.))/pg) {
-	while ($line =~ /(\Q$ENV{SEMPL_OPEN}\E(.)(.*?)\Q$ENV{SEMPL_CLOSE}\E)/pg) {
+	#while ($line =~ /(\Q$open\E(.)(.*?)\Q$close\E|\\(.))/pg) {
+	while ($line =~ /(\Q$open\E(.)(.*?)\Q$close\E)/pg) {
 		my $match = $1;
 		my $char = $2;
 		my $param = $3;

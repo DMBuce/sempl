@@ -1,6 +1,5 @@
 #!/usr/bin/env sempl
-SEMPL_OPEN='<'
-SEMPL_CLOSE='>'
+SEMPL_BRACES='<>'
 var = value
 var1='value'
 var2='this value'\''s got a quote in the middle'
@@ -103,7 +102,7 @@ To capture stderr, use shell redirection.
 ### Stdin: {-}
 
 	$ echo -e 'en\nid\nic' | sempl 'V{-}i,'
-	<!echo -e 'en\nid\nic' | SEMPL_OPEN={ SEMPL_CLOSE=} ./bin/sempl 'V{-}i,'>
+	<!echo -e 'en\nid\nic' | SEMPL_BRACES='{}' ./bin/sempl 'V{-}i,'>
 
 ## Frontmatter: #!sempl
 
