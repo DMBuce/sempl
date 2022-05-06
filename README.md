@@ -142,8 +142,8 @@ fifth, and seventh through last fields.
 
 can be rewritten as
 
-    ... {!a-very | long --command | pipe-line} \
-    {./a/very/long/file/name} \
+    ... {!a-very | long --command | pipe-line} {\}
+    {./a/very/long/file/name} {\}
     {$a_very_long_environment_variable_name}
 
 A variant form of line continuation
@@ -153,14 +153,14 @@ can be used to treat multiple parameters as being on one line.
     #!/usr/bin/env sempl
     bar='==='
     #!end sempl env
-    {!echo -e 'one\ntwo\nthree'}\n\
+    {!echo -e 'one\ntwo\nthree'}{\\}
     {$bar}
 
 renders as
 
-    one\n\
-    two\n\
-    three\n\
+    one
+    two
+    three
     ===
 
 

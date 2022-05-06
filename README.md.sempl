@@ -13,13 +13,6 @@ bar='==='
 #ln=$.
 #SEMPL_IFS="\s+"
 #SEMPL_OFS=" "
-#SEMPL_DEST="s/\.template$//"
-#SEMPL_CHARS="$!-#?=\<,:;1{}"
-##SEMPL_CHARS="%|<@: </>"
-#SEMPL_FILE="[/.]"
-#SEMPL_CMD="[| ]"
-#SEMPL_PARSER=default|unescape|frontmatter
-#SEMPL_FLAGS=(u)nescape (e)scape (f)rontmatter (b)ody (s)trict (l)oose
 #!end sempl env
 
 # Sempl
@@ -158,8 +151,8 @@ fifth, and seventh through last fields.
 
 can be rewritten as
 
-    ... {!a-very | long --command | pipe-line} \
-    {./a/very/long/file/name} \
+    ... {!a-very | long --command | pipe-line} {\}
+    {./a/very/long/file/name} {\}
     {$a_very_long_environment_variable_name}
 
 A variant form of line continuation
@@ -169,12 +162,12 @@ can be used to treat multiple parameters as being on one line.
     #!/usr/bin/env sempl
     bar='==='
     #!end sempl env
-    {!echo -e 'one\ntwo\nthree'}\n\
+    {!echo -e 'one\ntwo\nthree'}{\\}
     {$bar}
 
 renders as
 
-    <!SEMPL_BRACES={} sempl $'{!echo -e "one\\\\ntwo\\\\nthree"}\\\\n\\\\\n{$bar}'>
+    <!SEMPL_BRACES={} sempl $'{!echo -e "one\\\\ntwo\\\\nthree"}{\\\\\\\\}\n{$bar}'>
 
 
 
