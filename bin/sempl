@@ -111,7 +111,7 @@ sub process {
 	my $lvl     = shift;
 	#my ($char, $param, $var, $fstring, $lvl) = @_;
 	if ($$char eq '$') {
-		$$var = $$var ? ++$$var : 'a';
+		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
 		print $out "echo \"\$$$param\" | while read $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
@@ -122,12 +122,12 @@ sub process {
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
 	} elsif ($$char eq '!') {
-		$$var = $$var ? ++$$var : 'a';
+		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
 		print $out "( $$param ) | while read $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
 	} elsif ($$char eq '-') {
-		$$var = $$var ? ++$$var : 'a';
+		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
 		my $stdin = do { local $/; <STDIN> };
 		$stdin =~ s/'/'\\''/g;
 		print $out "echo -n '$stdin' | while read $$var; do\n";

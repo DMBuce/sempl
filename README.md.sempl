@@ -31,10 +31,10 @@ so the following would be rendered as-is:
      # but you'd be wrong }
 
 <!-- test
-    {# you might think
+    <# you might think
      # this would be
      # a multiline comment,
-     # but you'd be wrong }
+     # but you'd be wrong >
 -->
 
 ## Basic Parameters
@@ -90,6 +90,31 @@ To capture stderr, use shell redirection.
 	$ echo -e 'en\nid\nic' | sempl 'V{-}i,'
 	<!echo -e 'en\nid\nic' | SEMPL_BRACES='{}' ./bin/sempl 'V{-}i,'>
 
+## Fields: {<$envvar} {<!command} {</file} {<.file} {<-} {N,N:,N:M,:M,...}
+
+`{<param}` produces no output by itself.
+Instead, it interpolates fields from each line of `{param}`
+into the template's current line using a cut-like syntax.
+
+For example, suppose we have the following in `./madlibs.dat`:
+
+    <./madlibs.dat>
+
+In that case,
+
+    {<./madlibs.dat}The {:2} {3} the {4:5} and {6:}.
+
+renders as
+
+    <<./madlibs.dat>The <:2> <3> the <4:5> and <6:>.
+
+`{0}` expands to the whole line.
+`{N}` expands to the Nth field.
+Field ranges can be selected using `{N:}`, `{N:M}`, and `{:M}`.
+Multiple field ranges can be expanded using commas.
+For example, `{:3,5,7:}` would expand to the first through third,
+fifth, and seventh through last fields.
+
 ## Frontmatter: #!sempl
 
 Similar to some other templating systems,
@@ -119,34 +144,9 @@ Quotes in quoted strings can be escaped in a way that the shell will understand.
 
     var3='<$var3>'
 
-## Fields: {<$envvar} {<!command} {</file} {<.file} {<-} {N,N:,N:M,:M,...}
-
-`{<param}` produces no output by itself.
-Instead, it interpolates fields from each line of `{param}`
-into the template's current line using a cut-like syntax.
-
-For example, suppose we have the following in `./madlibs.dat`:
-
-    <./madlibs.dat>
-
-In that case,
-
-    {<./madlibs.dat}The {:2} {3} the {4:5} and {6:}.
-
-renders as
-
-    <<./madlibs.dat>The <:2> <3> the <4:5> and <6:>.
-
-`{0}` expands to the whole line.
-`{N}` expands to the Nth field.
-Field ranges can be selected using `{N:}`, `{N:M}`, and `{:M}`.
-Multiple field ranges can be expanded using commas.
-For example, `{:3,5,7:}` would expand to the first through third,
-fifth, and seventh through last fields.
-
 ## Continuation
 
-### Statement Continuation
+### Statement Continuation: {\}
 
 If a line ends with `{\}`, that line and the following one are processed together.
 
@@ -166,7 +166,7 @@ If the `{\}` were not in the template, instead it would render as
     <!echo -e 'one\ntwo\nthree'>
     <$bar>
 
-### Line Continuation
+### Line Continuation: {\\} and {\\\}
 
 To continue a line, use `{\\}`.
 To also clobber leading whitespace on the next line, use `{\\\}`.
@@ -198,7 +198,44 @@ All three render as
         <./hello.txt>
 -->
 
-## Braces: {{}}, <$LB>/>, [], @@, ...
+### Line Interpolation
+
+Note that in the example above,
+Sempl renders every combination of lines from each parameter
+due to line interpolation.
+Sempl reads and expands parameters from left to right, so
+
+    {$SHELL}> {!echo -e 'a\nb\nc'}. {./hello.txt}
+
+expands to
+
+    <$SHELL>> {!echo -e 'a\nb\nc'}. {./hello.txt}
+
+then to
+
+    <$SHELL>> <!echo -e 'a\nb\nc'>. {./hello.txt}
+
+before rendering the final form shown in the previous example.
+
+The end result could be thought of as a
+[cross join](https://en.wikipedia.org/wiki/Join_(SQL)#Cross_join) from SQL
+or a [cartesian product](https://en.wikipedia.org/wiki/Cartesian_product)
+from mathematics.
+
+Cross joins can take a long time to render and are often not what you want.
+One way to avoid them is to use the `{!command}` parameter to process the data.
+For example, the following two statements
+
+    {$SHELL}> {!echo -e 'a\nb\nc' | paste -d" " - hello.txt}
+    {$SHELL}> {<!echo -e 'a\nb\nc' | cat -n | join - <(cat -n hello.txt)}{2:}
+
+respectively render as
+
+    <$SHELL>> <!echo -e 'a\nb\nc' | paste -d" " - hello.txt>
+
+    <$SHELL>> <<!echo -e 'a\nb\nc' | cat -n | join - <(cat -n hello.txt)><2:>
+
+## Braces: {{}} <$LB>/> [] @@ ...
 
 If your SOURCE contains curly braces,
 you can set the `$SEMPL_BRACES` environment variable
