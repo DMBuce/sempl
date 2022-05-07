@@ -217,9 +217,65 @@ All three render as
 -->
 
 
-<!--
 ## Running Sempl
 
+Basic usage:
+
+    sempl SOURCE DEST
+
+Read a template on stdin and render it on stdout:
+
+    echo 'My shell is {$SHELL}' | sempl - -
+
+By default, SOURCE and DEST are both "-",
+so the above example is the same as
+
+    echo 'My shell is {$SHELL}' | sempl
+
+If SOURCE contains "{" followed by "}",
+it is interpreted as a template
+
+    sempl 'My shell is {$SHELL}'
+
+Otherwise, it's interpreted as a file
+
+    sempl file.txt.sempl
+
+Write the output to a file
+
+    echo 'My shell is {$SHELL}' | sempl - file.txt
+    sempl 'My shell is {$SHELL}' file.txt
+    sempl file.txt.sempl file.txt
+
+## Dealing with {Braces}
+
+If your SOURCE contains curly braces,
+you can set the `$SEMPL_BRACES` environment variable
+to avoid ambiguities.
+
+    $ export SEMPL_BRACES='{{}}'
+    $ sempl 'My {$SHELL} is {{$SHELL}}'
+    My {$SHELL} is /bin/bash
+
+    $ export SEMPL_BRACES='</>'
+    $ sempl 'My {$SHELL} is <$SHELL/>'
+    My {$SHELL} is /bin/bash
+
+    $ export SEMPL_BRACES='[]'
+    $ sempl 'My {$SHELL} is [$SHELL]'
+    My {$SHELL} is /bin/bash
+
+    $ export SEMPL_BRACES='@@'
+    $ sempl 'My {$SHELL} is @$SHELL@'
+    My {$SHELL} is /bin/bash
+
+Sempl internally sets the $LBRACE and $RBRACE environment variables from $SEMPL_BRACES,
+so you can use those to avoid ambiguity as well.
+
+    $ sempl 'My {$LBRACE}$SHELL} is {$SHELL}'
+    My {$SHELL} is /bin/bash
+
+<!--
 ## Nesting
 
 ## Joins
