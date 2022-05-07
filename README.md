@@ -1,7 +1,7 @@
 
 # Sempl
 
-A simple, line-oriented template system for the command line.
+A simple, line-oriented template utility for the command line.
 Useful for injecting command output, file contents,
 and environment variables into arbitrary text.
 
