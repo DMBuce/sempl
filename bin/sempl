@@ -72,7 +72,6 @@ do {
 	my $fstring = '';
 	my $lvl = 0;
 	chomp $line;
-	#while ($line =~ /(\Q$open\E(.)(.*?)\Q$close\E|\\(.))/pg) {
 	while ($line =~ /(\Q$open\E(\\{1,3})\Q$close\E$|\Q$open\E(.)(.*?)\Q$close\E)/pg) {
 		my $match = $1;
 		my $cont = $2;
@@ -82,19 +81,11 @@ do {
 		my $t = $text;
 		$t =~ s/'/'\\''/g;
 		$fstring .= "'$t'";
-		if (defined $cont && $cont eq "\\\\\\") {
-			$line = <$in>;
-			$line =~ s/^\s+//;
-			chomp $line;
-			next;
-		} elsif (defined $cont && $cont eq "\\\\") {
+		if (defined $cont) {
 			$line = <$in>;
 			chomp $line;
-			next;
-		} elsif (defined $cont && $cont eq "\\") {
-			$fstring .= "\$'\\n'";
-			$line = <$in>;
-			chomp $line;
+			$line =~ s/^\s+// if $cont eq "\\\\\\";
+			$fstring .= "\$'\\n'" if $cont eq "\\";
 			next;
 		} elsif ($char ne '#') {
 			process(\$char, \$param, \$var, \$fstring, \$lvl);
