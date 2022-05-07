@@ -216,7 +216,7 @@ All three render as
     /bin/bash> c. how are you?
 -->
 
-### Line Interpolation
+## Line Interpolation
 
 Note that in the example above,
 Sempl renders every combination of lines from each parameter
@@ -287,14 +287,6 @@ so you can use those to avoid ambiguity as well.
     $ unset SEMPL_BRACES
     $ sempl 'My {$LB}$SHELL} is {$SHELL}'
     My {$SHELL} is /bin/bash
-
-<!--
-## Nesting
-
-## Joins
-
-TODO: explore different kinds of join-like expressions
--->
 
 ## Running Sempl
 

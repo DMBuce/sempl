@@ -198,7 +198,7 @@ All three render as
         <./hello.txt>
 -->
 
-### Line Interpolation
+## Line Interpolation
 
 Note that in the example above,
 Sempl renders every combination of lines from each parameter
@@ -264,14 +264,6 @@ so you can use those to avoid ambiguity as well.
     $ unset SEMPL_BRACES
     $ sempl 'My {$LB}$SHELL} is {$SHELL}'
     My {$SHELL} is <$SHELL>
-
-<!--
-## Nesting
-
-## Joins
-
-TODO: explore different kinds of join-like expressions
--->
 
 ## Running Sempl
 
