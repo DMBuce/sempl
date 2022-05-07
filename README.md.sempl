@@ -5,12 +5,6 @@ var1='value'
 var2='this value'\''s got a quote in the middle'
 var3='escaped quotes aren'\\''t pretty, but they'\\''re possible'
 bar='==='
-# other ideas
-#n=$'\n'
-#t=$'\t'
-#ln=$.
-#SEMPL_IFS="\s+"
-#SEMPL_OFS=" "
 #!end sempl env
 
 # Sempl
