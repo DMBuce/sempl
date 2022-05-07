@@ -271,12 +271,15 @@ to avoid ambiguities.
     $ export SEMPL_BRACES='{{}}'
     $ sempl 'My {$SHELL} is {{$SHELL}}'
     My {$SHELL} is /bin/bash
+
     $ export SEMPL_BRACES='</>'
     $ sempl 'My {$SHELL} is <$SHELL/>'
     My {$SHELL} is /bin/bash
+
     $ export SEMPL_BRACES='[]'
     $ sempl 'My {$SHELL} is [$SHELL]'
     My {$SHELL} is /bin/bash
+
     $ export SEMPL_BRACES='@' # same as '@@'
     $ sempl 'My {$SHELL} is @$SHELL@'
     My {$SHELL} is /bin/bash
