@@ -241,22 +241,19 @@ and
 
 ## Braces: {{}} <$LB>/> [] @@ ...
 
-If your SOURCE contains curly braces,
+If your template contains curly braces,
 you can set the `$SEMPL_BRACES` environment variable
 to avoid ambiguities.
 
     $ export SEMPL_BRACES='{{}}'
     $ sempl 'My {$SHELL} is {{$SHELL}}'
     My {$SHELL} is <$SHELL>
-
     $ export SEMPL_BRACES='<$LB>/>'
     $ sempl 'My {$SHELL} is <$LB>$SHELL/>'
     My {$SHELL} is <$SHELL>
-
     $ export SEMPL_BRACES='[]'
     $ sempl 'My {$SHELL} is [$SHELL]'
     My {$SHELL} is <$SHELL>
-
     $ export SEMPL_BRACES='@' # same as '@@'
     $ sempl 'My {$SHELL} is @$SHELL@'
     My {$SHELL} is <$SHELL>

@@ -264,22 +264,19 @@ and
 
 ## Braces: {{}} </> [] @@ ...
 
-If your SOURCE contains curly braces,
+If your template contains curly braces,
 you can set the `$SEMPL_BRACES` environment variable
 to avoid ambiguities.
 
     $ export SEMPL_BRACES='{{}}'
     $ sempl 'My {$SHELL} is {{$SHELL}}'
     My {$SHELL} is /bin/bash
-
     $ export SEMPL_BRACES='</>'
     $ sempl 'My {$SHELL} is <$SHELL/>'
     My {$SHELL} is /bin/bash
-
     $ export SEMPL_BRACES='[]'
     $ sempl 'My {$SHELL} is [$SHELL]'
     My {$SHELL} is /bin/bash
-
     $ export SEMPL_BRACES='@' # same as '@@'
     $ sempl 'My {$SHELL} is @$SHELL@'
     My {$SHELL} is /bin/bash
