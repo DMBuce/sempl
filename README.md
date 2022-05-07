@@ -247,7 +247,7 @@ Write the output to a file
     sempl 'My shell is {$SHELL}' file.txt
     sempl file.txt.sempl file.txt
 
-## Dealing with {Braces}
+## Alternative {Braces}
 
 If your SOURCE contains curly braces,
 you can set the `$SEMPL_BRACES` environment variable
@@ -265,13 +265,15 @@ to avoid ambiguities.
     $ sempl 'My {$SHELL} is [$SHELL]'
     My {$SHELL} is /bin/bash
 
-    $ export SEMPL_BRACES='@@'
+    $ export SEMPL_BRACES='@' # same as '@@'
     $ sempl 'My {$SHELL} is @$SHELL@'
     My {$SHELL} is /bin/bash
 
-Sempl internally sets the $LBRACE and $RBRACE environment variables from $SEMPL_BRACES,
+Sempl internally sets the $LBRACE and $RBRACE environment variables
+from $SEMPL_BRACES,
 so you can use those to avoid ambiguity as well.
 
+    $ unset SEMPL_BRACES
     $ sempl 'My {$LBRACE}$SHELL} is {$SHELL}'
     My {$SHELL} is /bin/bash
 
