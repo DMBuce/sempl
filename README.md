@@ -242,8 +242,10 @@ The end result could be thought of as a
 or a [cartesian product](https://en.wikipedia.org/wiki/Cartesian_product)
 from mathematics.
 
-Cross joins can take a long time to render and are often not what you want.
-One way to avoid them is to use the `{!command}` parameter to process the data.
+If several parameters each have a lot of lines,
+it can take a lot of time to interpolate them.
+The end result is also often not what you want.
+An alternative is to use the `{!command}` parameter to process the data.
 For example, the following two statements
 
     {$SHELL}> {!echo -e 'a\nb\nc' | paste -d" " - hello.txt}
