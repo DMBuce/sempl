@@ -235,6 +235,8 @@ respectively render as
 
     <$SHELL>> <!echo -e 'a\nb\nc' | paste -d" " - hello.txt>
 
+and
+
     <$SHELL>> <<!echo -e 'a\nb\nc' | cat -n | join - <(cat -n hello.txt)><2:>
 
 ## Braces: {{}} <$LB>/> [] @@ ...
