@@ -147,7 +147,7 @@ Quotes in quoted strings can be escaped in a way that the shell will understand.
 
 ## Continuation
 
-### Statement Continuation: {\}
+### Statement Continuation: {\\}
 
 If a line ends with `{\}`, that line and the following one are processed together.
 
@@ -173,7 +173,7 @@ If the `{\}` were not in the template, instead it would render as
     three
     ===
 
-### Line Continuation: {\\} and {\\\}
+### Line Continuation: {\\\\} and {\\\\\\}
 
 To continue a line, use `{\\}`.
 To also clobber leading whitespace on the next line, use `{\\\}`.
