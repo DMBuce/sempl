@@ -239,7 +239,7 @@ to avoid ambiguities.
     My {$SHELL} is /bin/bash
 
 Sempl internally sets the `$LB` and `$RB` environment variables
-from left and right braces of `$SEMPL_BRACES`,
+from the left and right braces of `$SEMPL_BRACES`,
 so you can use those to avoid ambiguity as well.
 
     $ unset SEMPL_BRACES
