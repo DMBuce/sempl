@@ -9,9 +9,9 @@ my $usage = "Syntax: $prog [SRC] [DEST]\n";
 
 # export default env vars
 $ENV{SEMPL_BRACES} ||= "{}";
-my $open  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
-my $close = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
-$open ||= $close;
+$ENV{LBRACE}  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
+$ENV{RBRACE} = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
+$ENV{LBRACE} ||= $ENV{RBRACE};
 
 # parse args
 my $src = shift || "-";
@@ -19,7 +19,7 @@ my $dest = shift || "-";
 
 # open input file
 my $in;
-if ($src =~ /\Q$open\E(.+?)\Q$close\E/) {
+if ($src =~ /\Q$ENV{LBRACE}\E(.+?)\Q$ENV{RBRACE}\E/) {
 	open($in, "<", \$src) or die $!;
 } else {
 	open($in, "<", $src) or die $!;
@@ -45,9 +45,9 @@ if ($line =~ /^#!.*$prog/) {
 			}
 			$ENV{$key} = $value;
 			if ($key eq "SEMPL_BRACES") {
-				$open  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
-				$close = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
-				$open ||= $close;
+				$ENV{LBRACE}  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
+				$ENV{RBRACE} = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
+				$ENV{LBRACE} ||= $ENV{RBRACE};
 			}
 			next;
 		} else {
@@ -72,7 +72,7 @@ do {
 	my $fstring = '';
 	my $lvl = 0;
 	chomp $line;
-	while ($line =~ /(\Q$open\E(\\{1,3})\Q$close\E$|\Q$open\E(.)(.*?)\Q$close\E)/pg) {
+	while ($line =~ /(\Q$ENV{LBRACE}\E(\\{1,3})\Q$ENV{RBRACE}\E$|\Q$ENV{LBRACE}\E(.)(.*?)\Q$ENV{RBRACE}\E)/pg) {
 		my $match = $1;
 		my $cont = $2;
 		my $char = $3;
