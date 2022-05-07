@@ -118,24 +118,34 @@ Quotes in quoted strings can be escaped in a way that the shell will understand.
 
     var3='escaped quotes aren'\''t pretty, but they'\''re possible'
 
-<!--
-## Loop: {<name param} {<name N,N:,N:M,:M,...} {<name;}
+## Fields: {<$envvar} {<!command} {</file} {<.file} {<-} {N,N:,N:M,:M,...}
 
-TODO: Implement this
+{<param} produces no output by itself.
+Instead, it interpolates each line of {param}
+into the template's current line using a cut-like syntax.
 
-{<param} begins reading from {param},
-but produces no output by itself.
-A {;<} ends a {<param} statement.
+For example, suppose we have the following in `./madlibs.dat`:
 
-Each line of {param}'s output is interpolated
-into the text between {<param} and {;<} using a cut-like syntax.
-{0} expands to the whole line.
-{N} expands to the Nth field.
-Field ranges can be selected using {N-}, {N-M}, and {-M}.
+    little	cat	feared	big	dog	made a run for it
+    fast	dog	chased	slow	cat	caught it
+
+In that case,
+
+    {<./madlibs.dat}The {:2} {3}ed the {4:5} and {6:}.
+
+renders as
+
+    The little cat feared the big dog and made a run for it.
+    The fast dog chased the slow cat and caught it.
+
+`{0}` expands to the whole line.
+`{N}` expands to the Nth field.
+Field ranges can be selected using `{N:}`, `{N:M}`, and `{:M}`.
 Multiple field ranges can be expanded using commas.
-For example, {-3,5,7-} would expand to the first through third,
+For example, `{:3,5,7:}` would expand to the first through third,
 fifth, and seventh through last fields.
 
+<!--
 ## Line Continuation
 
     ... {!a-very | long --command | pipe-line} {./a/very/long/file/name} {$a_very_long_environment_variable_name}

@@ -64,7 +64,7 @@ if ($line =~ /^#!.*$prog/) {
 }
 
 # create pipe attached to sh that we can send our output to
-open(my $out, "|-", "/bin/sh") or die "$!";
+open(my $out, "|-", "/bin/sh -e") or die "$!";
 
 # send all output to dest
 if ($dest ne "-") {
@@ -88,40 +88,15 @@ do {
 		my $t = $text;
 		$t =~ s/'/'\\''/g;
 		$fstring .= "'$t'";
-		if ($char eq '#') {
-			# do nothing
-		} elsif ($char eq '$') {
-			$var = $var ? ++$var : 'a';
-			print $out "echo \"\$$param\" | while read $var; do\n";
-			$fstring .= "\"\$$var\"";
-			$lvl++;
-		} elsif ($char eq '/' or $char eq '.') {
-			$var = $var ? ++$var : 'a';
-			$param =~ s/'/'\\''/g;
-			print $out "cat -- '$char$param' | while read $var; do\n";
-			$fstring .= "\"\$$var\"";
-			$lvl++;
-		} elsif ($char eq '!') {
-			$var = $var ? ++$var : 'a';
-			print $out "( $param ) | while read $var; do\n";
-			$fstring .= "\"\$$var\"";
-			$lvl++;
-		} elsif ($char eq '-') {
-			$var = $var ? ++$var : 'a';
-			my $stdin = do { local $/; <STDIN> };
-			$stdin =~ s/'/'\\''/g;
-			print $out "echo -n '$stdin' | while read $var; do\n";
-			$fstring .= "\"\$$var\"";
-			$lvl++;
+		if ($char ne '#') {
+			process(\$char, \$param, \$var, \$fstring, \$lvl);
+		#if ($char eq '#') {
+		#	# do nothing
+
 		#} elsif ($escape) {
 		#	$escape = "\n" if $escape eq "n";
 		#	$escape = "\t" if $escape eq "t";
 		#	$fstring .= "'$escape'";
-
-		# TODO:
-		# {<param} {N:M} {;}
-		# while read -a $var; do
-		# echo ${i[@]:N-1:M+1-N}
 		}
 		$line =~ s/^\Q$text$match\E//;
 	}
@@ -136,3 +111,66 @@ do {
 close $out;
 close $in;
 
+sub process {
+	my $char    = shift;
+	my $param   = shift;
+	my $var     = shift;
+	my $fstring = shift;
+	my $lvl     = shift;
+	#my ($char, $param, $var, $fstring, $lvl) = @_;
+	if ($$char eq '$') {
+		$$var = $$var ? ++$$var : 'a';
+		print $out "echo \"\$$$param\" | while read $$var; do\n";
+		$$fstring .= "\"\$$$var\"";
+		$$lvl++;
+	} elsif ($$char eq '/' or $$char eq '.') {
+		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;
+		$$param =~ s/'/'\\''/g;
+		print $out "cat -- '$$char$$param' | while read $$var; do\n";
+		$$fstring .= "\"\$$$var\"";
+		$$lvl++;
+	} elsif ($$char eq '!') {
+		$$var = $$var ? ++$$var : 'a';
+		print $out "( $$param ) | while read $$var; do\n";
+		$$fstring .= "\"\$$$var\"";
+		$$lvl++;
+	} elsif ($$char eq '-') {
+		$$var = $$var ? ++$$var : 'a';
+		my $stdin = do { local $/; <STDIN> };
+		$stdin =~ s/'/'\\''/g;
+		print $out "echo -n '$stdin' | while read $$var; do\n";
+		$$fstring .= "\"\$$$var\"";
+		$$lvl++;
+	#
+	# TODO:
+	# {<param} {<N:M} {<;}
+	# while read -a $$var; do
+	# echo ${i[@]:N-1:M+1-N}
+	} elsif ($$char eq '0' and $$param eq "") { # {0}
+		$$fstring .= "\"\$_line\"";
+	} elsif ($$char =~ /[\d:]/) { # {N,N:,N:M,:M,...}
+		for my $fields (split /,/, "$$char$$param") {
+			if ($fields =~ /^(-?\d+)$/) {
+				my $i = $1 - 1;
+				$$fstring .= "\"\${_arr[$i]}\"";
+			} elsif ($fields =~ /^(-?\d+):$/) {
+				my $i = $1 - 1;
+				$$fstring .= "\"\${_arr[@]:$i}\"";
+			} else {
+				my ($start, $end) = split /:/, $fields;
+				$start ||= 1;
+				$end ||= $start;
+				$start -= 1;
+				my $len = $end - $start;
+				$$fstring .= "\"\${_arr[@]:$start:$len}\"";
+			}
+		}
+	} elsif ($$char eq '<') {
+		$$param =~ /^(.)(.*)/;
+		my $c = $1;
+		my $p = $2;
+		my $junk = "";
+		process(\$c, \$p, \"_line", \$junk, $lvl);
+		print $out "read -a _arr <<< \"\$_line\"\n";
+	}
+}
