@@ -148,13 +148,22 @@ fifth, and seventh through last fields.
 <!--
 ## Line Continuation
 
-    ... {!a-very | long --command | pipe-line} {./a/very/long/file/name} {$a_very_long_environment_variable_name}
+    {$SHELL}> {!echo -e 'a\nb\nc'}. {./hello.txt}
 
 can be rewritten as
 
-    ... {!a-very | long --command | pipe-line} {\}
-    {./a/very/long/file/name} {\}
-    {$a_very_long_environment_variable_name}
+    {$SHELL}> {\}
+    {!echo -e 'a\nb\nc'}. {\}
+    {./hello.txt}
+
+Both render as
+
+    /bin/bash> 
+    a. 
+    b. 
+    c. 
+    Hello world,
+    how are you?
 
 There's also a variant form of line continuation
 that doesn't clobber newlines.
