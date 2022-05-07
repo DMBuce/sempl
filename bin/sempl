@@ -90,13 +90,6 @@ do {
 		$fstring .= "'$t'";
 		if ($char ne '#') {
 			process(\$char, \$param, \$var, \$fstring, \$lvl);
-		#if ($char eq '#') {
-		#	# do nothing
-
-		#} elsif ($escape) {
-		#	$escape = "\n" if $escape eq "n";
-		#	$escape = "\t" if $escape eq "t";
-		#	$fstring .= "'$escape'";
 		}
 		$line =~ s/^\Q$text$match\E//;
 	}
@@ -141,11 +134,6 @@ sub process {
 		print $out "echo -n '$stdin' | while read $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
-	#
-	# TODO:
-	# {<param} {<N:M} {<;}
-	# while read -a $$var; do
-	# echo ${i[@]:N-1:M+1-N}
 	} elsif ($$char eq '0' and $$param eq "") { # {0}
 		$$fstring .= "\"\$_line\"";
 	} elsif ($$char =~ /[\d:]/) { # {N,N:,N:M,:M,...}
