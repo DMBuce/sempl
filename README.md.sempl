@@ -152,38 +152,62 @@ Multiple field ranges can be expanded using commas.
 For example, `{:3,5,7:}` would expand to the first through third,
 fifth, and seventh through last fields.
 
-<!--
-## Line Continuation
+## Continuation
+
+### Statement Continuation
+
+If a line ends with `{\}`, that line and the following one are processed together.
+
+    #!/usr/bin/env sempl
+    bar='==='
+    #!end sempl env
+    {!echo -e 'one\ntwo\nthree'}{\}
+    {$bar}
+
+renders as
+
+    <!echo -e 'one\ntwo\nthree'><\>
+    <$bar>
+
+If the `{\}` were not in the template, instead it would render as
+
+    <!echo -e 'one\ntwo\nthree'>
+    <$bar>
+
+### Line Continuation
+
+To continue a line, use `{\\}`.
+To also clobber leading whitespace on the next line, use `{\\\}`.
 
     {$SHELL}> {!echo -e 'a\nb\nc'}. {./hello.txt}
 
 can be rewritten as
 
-    {$SHELL}> {\}
-    {!echo -e 'a\nb\nc'}. {\}
+    {$SHELL}> {\\}
+    {!echo -e 'a\nb\nc'}. {\\}
     {./hello.txt}
 
-Both render as
+and also as
 
-    <$SHELL>> <\>
-    <!echo -e 'a\nb\nc'>. <\>
-    <./hello.txt>
+    {$SHELL}> {\\\}
+        {!echo -e 'a\nb\nc'}. {\\\}
+        {./hello.txt}
 
-There's also a variant form of line continuation
-that doesn't clobber newlines.
+All three render as
 
-    #!/usr/bin/env sempl
-    bar='==='
-    #!end sempl env
-    {!echo -e 'one\ntwo\nthree'}{\\}
-    {$bar}
+    <$SHELL>> <!echo -e 'a\nb\nc'>. <./hello.txt>
+<!--
+    <$SHELL>> <\\>
+<!echo -e 'a\nb\nc'>. <\\>
+<./hello.txt>
 
-renders as
+    <$SHELL>> <\\\>
+        <!echo -e 'a\nb\nc'>. <\\\>
+        <./hello.txt>
+-->
 
-    <!SEMPL_BRACES={} sempl $'{!echo -e "one\\\\ntwo\\\\nthree"}{\\\\\\\\}\n{$bar}'>
 
-
-
+<!--
 ## Running Sempl
 
 ## Nesting

@@ -58,6 +58,7 @@ if ($line =~ /^#!.*$prog/) {
 
 # create pipe attached to sh that we can send our output to
 open(my $out, "|-", "/bin/sh -e") or die "$!";
+#open(my $out, "|-", "/bin/cat") or die "$!";
 
 # send all output to dest
 if ($dest ne "-") {
@@ -72,16 +73,30 @@ do {
 	my $lvl = 0;
 	chomp $line;
 	#while ($line =~ /(\Q$open\E(.)(.*?)\Q$close\E|\\(.))/pg) {
-	while ($line =~ /(\Q$open\E(.)(.*?)\Q$close\E)/pg) {
+	while ($line =~ /(\Q$open\E(\\{1,3})\Q$close\E$|\Q$open\E(.)(.*?)\Q$close\E)/pg) {
 		my $match = $1;
-		my $char = $2;
-		my $param = $3;
-		#my $escape = $4;
+		my $cont = $2;
+		my $char = $3;
+		my $param = $4;
 		my $text = ${^PREMATCH};
 		my $t = $text;
 		$t =~ s/'/'\\''/g;
 		$fstring .= "'$t'";
-		if ($char ne '#') {
+		if (defined $cont && $cont eq "\\\\\\") {
+			$line = <$in>;
+			$line =~ s/^\s+//;
+			chomp $line;
+			next;
+		} elsif (defined $cont && $cont eq "\\\\") {
+			$line = <$in>;
+			chomp $line;
+			next;
+		} elsif (defined $cont && $cont eq "\\") {
+			$fstring .= "\$'\\n'";
+			$line = <$in>;
+			chomp $line;
+			next;
+		} elsif ($char ne '#') {
 			process(\$char, \$param, \$var, \$fstring, \$lvl);
 		}
 		$line =~ s/^\Q$text$match\E//;

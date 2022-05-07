@@ -145,44 +145,79 @@ Multiple field ranges can be expanded using commas.
 For example, `{:3,5,7:}` would expand to the first through third,
 fifth, and seventh through last fields.
 
-<!--
-## Line Continuation
+## Continuation
 
-    {$SHELL}> {!echo -e 'a\nb\nc'}. {./hello.txt}
+### Statement Continuation
 
-can be rewritten as
-
-    {$SHELL}> {\}
-    {!echo -e 'a\nb\nc'}. {\}
-    {./hello.txt}
-
-Both render as
-
-    /bin/bash> 
-    a. 
-    b. 
-    c. 
-    Hello world,
-    how are you?
-
-There's also a variant form of line continuation
-that doesn't clobber newlines.
+If a line ends with `{\}`, that line and the following one are processed together.
 
     #!/usr/bin/env sempl
     bar='==='
     #!end sempl env
-    {!echo -e 'one\ntwo\nthree'}{\\}
+    {!echo -e 'one\ntwo\nthree'}{\}
     {$bar}
 
 renders as
+
+    one
+    ===
+    two
+    ===
+    three
+    ===
+
+If the `{\}` were not in the template, instead it would render as
 
     one
     two
     three
     ===
 
+### Line Continuation
+
+To continue a line, use `{\\}`.
+To also clobber leading whitespace on the next line, use `{\\\}`.
+
+    {$SHELL}> {!echo -e 'a\nb\nc'}. {./hello.txt}
+
+can be rewritten as
+
+    {$SHELL}> {\\}
+    {!echo -e 'a\nb\nc'}. {\\}
+    {./hello.txt}
+
+and also as
+
+    {$SHELL}> {\\\}
+        {!echo -e 'a\nb\nc'}. {\\\}
+        {./hello.txt}
+
+All three render as
+
+    /bin/bash> a. Hello world,
+    /bin/bash> a. how are you?
+    /bin/bash> b. Hello world,
+    /bin/bash> b. how are you?
+    /bin/bash> c. Hello world,
+    /bin/bash> c. how are you?
+<!--
+    /bin/bash> a. Hello world,
+    /bin/bash> a. how are you?
+    /bin/bash> b. Hello world,
+    /bin/bash> b. how are you?
+    /bin/bash> c. Hello world,
+    /bin/bash> c. how are you?
+
+    /bin/bash> a. Hello world,
+    /bin/bash> a. how are you?
+    /bin/bash> b. Hello world,
+    /bin/bash> b. how are you?
+    /bin/bash> c. Hello world,
+    /bin/bash> c. how are you?
+-->
 
 
+<!--
 ## Running Sempl
 
 ## Nesting
