@@ -257,6 +257,8 @@ respectively render as
     /bin/bash> b how are you?
     /bin/bash> c
 
+and
+
     /bin/bash> a Hello world,
     /bin/bash> b how are you?
 
