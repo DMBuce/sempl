@@ -8,8 +8,6 @@ bar='==='
 # other ideas
 #n=$'\n'
 #t=$'\t'
-#lb='{'
-#rb='}'
 #ln=$.
 #SEMPL_IFS="\s+"
 #SEMPL_OFS=" "
@@ -206,7 +204,7 @@ All three render as
         <./hello.txt>
 -->
 
-## Braces: {{}}, <$LBRACE>/>, [], @@, ...
+## Braces: {{}}, <$LB>/>, [], @@, ...
 
 If your SOURCE contains curly braces,
 you can set the `$SEMPL_BRACES` environment variable
@@ -216,8 +214,8 @@ to avoid ambiguities.
     $ sempl 'My {$SHELL} is {{$SHELL}}'
     My {$SHELL} is <$SHELL>
 
-    $ export SEMPL_BRACES='<$LBRACE>/>'
-    $ sempl 'My {$SHELL} is <$LBRACE>$SHELL/>'
+    $ export SEMPL_BRACES='<$LB>/>'
+    $ sempl 'My {$SHELL} is <$LB>$SHELL/>'
     My {$SHELL} is <$SHELL>
 
     $ export SEMPL_BRACES='[]'
@@ -228,12 +226,12 @@ to avoid ambiguities.
     $ sempl 'My {$SHELL} is @$SHELL@'
     My {$SHELL} is <$SHELL>
 
-Sempl internally sets the $LBRACE and $RBRACE environment variables
-from $SEMPL_BRACES,
+Sempl internally sets the `$LB` and `$RB` environment variables
+from left and right braces of `$SEMPL_BRACES`,
 so you can use those to avoid ambiguity as well.
 
     $ unset SEMPL_BRACES
-    $ sempl 'My {$LBRACE}$SHELL} is {$SHELL}'
+    $ sempl 'My {$LB}$SHELL} is {$SHELL}'
     My {$SHELL} is <$SHELL>
 
 <!--
