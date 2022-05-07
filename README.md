@@ -120,8 +120,8 @@ Quotes in quoted strings can be escaped in a way that the shell will understand.
 
 ## Fields: {<$envvar} {<!command} {</file} {<.file} {<-} {N,N:,N:M,:M,...}
 
-{<param} produces no output by itself.
-Instead, it interpolates each line of {param}
+`{<param}` produces no output by itself.
+Instead, it interpolates each line of `{param}`
 into the template's current line using a cut-like syntax.
 
 For example, suppose we have the following in `./madlibs.dat`:
