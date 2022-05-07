@@ -131,7 +131,7 @@ For example, suppose we have the following in `./madlibs.dat`:
 
 In that case,
 
-    {<./madlibs.dat}The {:2} {3}ed the {4:5} and {6:}.
+    {<./madlibs.dat}The {:2} {3} the {4:5} and {6:}.
 
 renders as
 
