@@ -1,0 +1,12 @@
+#!/usr/bin/env sempl
+#!end sempl env
+{$HOME.jkl}
+{$.jkl}
+{-baz}
+{<asdf}
+{::2}{\\}
+{#how should missing vars/files/commands be handled?}{\\}
+{#$foo}{\\}
+{#/foo}{\\}
+{#./foo}{\\}
+{#!foo}
