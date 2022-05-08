@@ -322,6 +322,21 @@ Write the output to a file
     sempl 'My shell is {$SHELL}' file.txt
     sempl file.txt.sempl file.txt
 
+### Environment
+
+Sempl's behavior can be controlled with environment variables.
+
+#### $SEMPL_BRACES
+
+Sets the braces that surround parameters.
+See the "Braces" section above for details.
+
+#### $SEMPL_DUMP
+
+Normally, Sempl works by generating and running a shell script to produce output.
+If `$SEMPL_DUMP` is set to anything other than "0" or "",
+Sempl will instead write the shell script to DEST.sh without running it.
+
 <!--
 ## Examples
 -->

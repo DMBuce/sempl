@@ -62,9 +62,15 @@ if ($line =~ /^#!.*$prog/) {
 	}
 }
 
-# create pipe attached to sh that we can send our output to
-open(my $out, "|-", "/bin/sh -e") or die "$!";
-#open(my $out, "|-", "/bin/cat") or die "$!";
+# open output handle
+my $out;
+if ($ENV{SEMPL_DUMP}) {
+	# write shell script to dest without executing it
+	open($out, ">", $dest.".sh") or die $!;
+} else {
+	# run shell script directly
+	open($out, "|-", "/bin/sh -e") or die "$!";
+}
 
 # send all output to dest
 if ($dest ne "-") {
