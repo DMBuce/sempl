@@ -1,6 +1,33 @@
 #!/bin/bash
+# called by "git commit" with no arguments
+#
+# exits with non-zero status to stop the commit if an error is detected
 
+# redirect all output to stderr
+exec 1>&2
+
+# bail if a command fails
+set -e
+
+# check for whitespace errors
+against=HEAD
+# diff against an empty tree object if this is the initial commit
+if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+	against=$(git hash-object -t tree /dev/null)
+fi
+git diff-index --check --cached $against --
+
+# prevent non-ascii filenames from being added
+echo "Checking for non-ASCII filenames"
+git diff --cached --name-only --diff-filter=A -z $against \
+	| tr '\0' '\n' \
+	| grep '[^ -~]' \
+	&& exit 1
+
+# run tests
+make check
 # update docs
 make doc
+# add updated files
 git add README.md
 

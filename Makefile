@@ -63,10 +63,10 @@ installdirs: $(INSTALL_DIRS)
 .PHONY: doc
 doc: $(DOCFILES)
 
-.PHONY: test
-test:
-	./test.txt.sempl | diff -u test.txt -
-	./README.md.sempl | diff -u README.md -
+.PHONY: check
+check:
+	./bin/sempl test.txt.sempl | diff -u test.txt -
+	./bin/sempl README.md.sempl | diff -u README.md -
 
 $(INSTALL_DIRS):
 	$(INSTALL) -d $@
