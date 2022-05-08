@@ -17,6 +17,12 @@ $ENV{LB} ||= $ENV{RB};
 my $src = shift || "-";
 my $dest = shift || "-";
 
+# make sure $src and $dest are not the same file
+if ( my ($dev1, $ino1) = (stat $dest)[0, 1] ) {
+	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$!";
+	$dev1 == $dev2 && $ino1 == $ino2 and die "'$src' and '$dest' are the same file";
+}
+
 # open input file
 my $in;
 if ($src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/) {
@@ -26,7 +32,7 @@ if ($src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/) {
 }
 
 # process frontmatter
-my $line = <$in>;
+my $line = <$in> || "";
 if ($line =~ /^#!.*$prog/) {
 	while ($line = <$in>) {
 		# export environment variables in frontmatter
