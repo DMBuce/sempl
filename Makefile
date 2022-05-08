@@ -65,8 +65,8 @@ doc: $(DOCFILES)
 
 .PHONY: check
 check:
-	./bin/sempl test.txt.sempl | diff -u test.txt -
-	./bin/sempl README.md.sempl | diff -u README.md -
+	./bin/sempl test/test.txt.sempl | diff -q test/test.txt -
+	./bin/sempl README.md.sempl | diff -q README.md -
 
 $(INSTALL_DIRS):
 	$(INSTALL) -d $@
