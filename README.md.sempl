@@ -303,7 +303,14 @@ Write the output to a file
 
 ### Environment
 
-Sempl's behavior can be controlled with environment variables.
+Sempl sets certain environment variables that can be used within templates.
+Other environment variables can be used to control Sempl's behavior.
+
+#### $SRC, $DEST
+
+These environment variables refer to the SRC and DEST passed to Sempl on the command line.
+They default to "-" and can't be overriden in the frontmatter,
+nor by passing them in from the environment of the process that launches sempl.
 
 #### $SEMPL_BRACES
 
