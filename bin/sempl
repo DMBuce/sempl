@@ -18,9 +18,10 @@ my $src = shift || "-";
 my $dest = shift || "-";
 
 # make sure $src and $dest are not the same file
-if ( my ($dev1, $ino1) = (stat $dest)[0, 1] ) {
+# TODO: make check works on windows
+if ( $^O ne "MSWin32" and my ($dev1, $ino1) = (stat $dest)[0, 1] ) {
 	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$!";
-	$dev1 == $dev2 && $ino1 == $ino2 and die "'$src' and '$dest' are the same file";
+	die "'$src' and '$dest' are the same file" if $dev1 == $dev2 && $ino1 == $ino2;
 }
 
 # open input file
