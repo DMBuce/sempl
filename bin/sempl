@@ -69,7 +69,7 @@ if ($ENV{SEMPL_DUMP}) {
 	open($out, ">", $dest.".sh") or die $!;
 } else {
 	# run shell script directly
-	open($out, "|-", "/bin/sh -e") or die "$!";
+	open($out, "|-", "bash -e") or die "$!";
 }
 
 # send all output to dest

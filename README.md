@@ -5,6 +5,8 @@ A simple, line-oriented template utility for the command line.
 Useful for injecting command output, file contents,
 and environment variables into arbitrary text.
 
+Requires perl and bash shell.
+
 ## Comments: {#comment}
 
     Want to know a secret? {#This text won't render}
