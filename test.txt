@@ -1,0 +1,5 @@
+{$HOME.jkl}
+{$.jkl}
+{-baz}
+{<asdf}
+{::2}
