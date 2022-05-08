@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# update docs
+make doc
+git add README.md
+
