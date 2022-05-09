@@ -313,8 +313,16 @@ that launches sempl.
 
 **$SEMPL_BRACES**::
 
-Sets the braces that surround parameters. See the "Braces" section
-above for details.
+Sets the braces that surround parameters.
+See the "Braces" section above for details.
+
+**$LB, $RB**::
+
+These environment variables are derive from `$SEMPL_BRACES`
+and respectively refer to the right and left braces that surround parameters.
+See the "Braces" section above for details.
+They can’t be overriden in the frontmatter,
+nor by passing them in from the environment of the process that launches sempl.
 
 **$SEMPL_DUMP**::
 

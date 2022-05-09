@@ -9,7 +9,8 @@ my $usage = "Syntax: $prog [SRC] [DEST]\n";
 
 # export default env vars
 $ENV{SEMPL_BRACES} ||= "{}";
-$ENV{LB}  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
+$ENV{SEMPL_DUMP} ||= "";
+$ENV{LB} = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
 $ENV{RB} = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
 $ENV{LB} ||= $ENV{RB};
 
@@ -51,11 +52,6 @@ if ($line =~ /^#!.*$prog/) {
 				$value =~ s/'\\''/'/g;
 			}
 			$ENV{$key} = $value;
-			if ($key eq "SEMPL_BRACES") {
-				$ENV{LB}  = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
-				$ENV{RB} = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
-				$ENV{LB} ||= $ENV{RB};
-			}
 			next;
 		} else {
 			warn "Invalid line in frontmatter: \n\t$line\n";
@@ -66,6 +62,9 @@ if ($line =~ /^#!.*$prog/) {
 # set env vars that frontmatter can't override
 $ENV{DEST} = $dest;
 $ENV{SRC} = $src;
+$ENV{LB} = substr $ENV{SEMPL_BRACES},0,length($ENV{SEMPL_BRACES})/2;
+$ENV{RB} = substr $ENV{SEMPL_BRACES},length($ENV{SEMPL_BRACES})/2,length($ENV{SEMPL_BRACES});
+$ENV{LB} ||= $ENV{RB};
 
 # open output handle
 my $out;
