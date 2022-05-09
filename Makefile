@@ -46,7 +46,7 @@ BUGREPORT = https://github.com/DMBuce/sempl/issues
 URL       = https://github.com/DMBuce/sempl
 
 BINFILES         = $(wildcard bin/*)
-DOCFILES         = README.md
+DOCFILES         = README.asciidoc
 BINFILES_INSTALL = $(BINFILES:bin/%=$(DESTDIR)$(bindir)/%)
 INSTALL_FILES    = $(BINFILES_INSTALL) $(DOCFILES_INSTALL)
 INSTALL_DIRS     = $(sort $(dir $(INSTALL_FILES)))
@@ -66,7 +66,7 @@ doc: $(DOCFILES)
 .PHONY: check
 check:
 	./bin/sempl test/test.txt.sempl | diff -q test/test.txt -
-	./bin/sempl README.md.sempl | diff -q README.md -
+	./bin/sempl README.asciidoc.sempl | diff -q README.asciidoc -
 
 $(INSTALL_DIRS):
 	$(INSTALL) -d $@

@@ -9,11 +9,11 @@ Requires perl and bash shell.
 
 ## Comments: {#comment}
 
-    Want to know a secret? {#This text won't render}
+    Want to know a secret?{#This text won't render}
 
 renders as
 
-    Want to know a secret? 
+    Want to know a secret?
 
 Sempl templates are evaluated line by line,
 and parameters such as the comment above must begin and end on the same line,

@@ -70,7 +70,7 @@ make check
 # update docs
 make doc
 #git add doc/* README.asciidoc
-git add README.md
+git add README.asciidoc
 
 ## unstage a file if the only lines in it that changed start with a pattern
 #file=PKGBUILD
