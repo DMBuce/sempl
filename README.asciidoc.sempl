@@ -121,7 +121,7 @@ Similar to some other templating systems, sempl templates can include a
 front matter at the beginning. The front matter’s first and last lines
 must start with `#!` and contain `sempl`. Every other line between them
 either defines an environment variable, or is a comment starting with
-`\#`. For example:
+`##`. For example:
 
  #!/usr/bin/env sempl
  # export value to $var
