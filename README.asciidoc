@@ -144,7 +144,7 @@ unquoted values are interpreted literally.
 Quotes in quoted strings can be escaped in a way that the shell will
 understand.
 
- var3='escaped quotes aren't pretty, but they're possible'
+ var3='escaped quotes aren'\''t pretty, but they'\''re possible'
 
 === Continuation
 
