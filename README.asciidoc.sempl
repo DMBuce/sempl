@@ -64,8 +64,7 @@ renders as
 
  ==> <./hello.txt> <==
 
-This also works with relative paths that start with `.` <#and home
-directories>.
+This also works with relative paths that start with `.` <#and home directories>.
 
  {.dotfile}
  {./file}

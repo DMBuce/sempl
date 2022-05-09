@@ -58,8 +58,7 @@ renders as
  ==> Hello world, <==
  ==> how are you? <==
 
-This also works with relative paths that start with `.` <#and home
-directories>.
+This also works with relative paths that start with `.` .
 
  {.dotfile}
  {./file}
