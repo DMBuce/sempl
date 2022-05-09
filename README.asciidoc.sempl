@@ -1,6 +1,7 @@
 #!/usr/bin/env sempl
 SEMPL_BRACES='<>'
-var = value var1='value'
+var = value
+var1='value'
 var2='this value's got a quote in the middle'
 var3='escaped quotes aren'\''t pretty, but they'\''re possible'
 bar='==='
@@ -32,9 +33,15 @@ would be rendered as-is:
   # a multiline comment,
   # but you'd be wrong }
 
+// test
+// <# you might think
+//  # this would be
+//  # a multiline comment,
+//  # but you'd be wrong >
+
 === Basic Parameters
 
-==== Environment Variables: \{$envvar}
+==== Environment Variables: {$envvar}
 
  My shell is {$SHELL}
 
@@ -42,7 +49,7 @@ on my system, renders as
 
  My shell is <$SHELL>
 
-==== Files: \{/file} or \{.file}<# or \{~file}>
+==== Files: {/file} or {.file}<# or {~file}>
 
 Suppose we have a file in `/tmp` named `hello.txt` with the following
 contents.
@@ -85,7 +92,7 @@ Only stdin is captured. To capture stderr, use shell redirection.
  $ echo -e 'en\nid\nic' | sempl 'V{-}i,'
  <!echo -e 'en\nid\nic' | SEMPL_BRACES='{}' ./bin/sempl 'V{-}i,'>
 
-=== Fields: \{<$envvar} \{<!command} \{</file} \{<.file} \{<-} \{N,N:,N:M,:M,…}
+=== Fields: {<$envvar} {<!command} {</file} {<.file} {<\-} {N,N:,N:M,:M,…}
 
 `{<param}` produces no output by itself. Instead, it interpolates fields
 from each line of `{param}` into the template’s current line using a
@@ -140,7 +147,7 @@ understand.
 
 === Continuation
 
-==== Statement Continuation: \{\}
+==== Statement Continuation: {\}
 
 If a line ends with `{\}`, that line and the following one are processed
 together.
@@ -161,7 +168,7 @@ If the `{\}` were not in the template, instead it would render as
  <!echo -e 'one\ntwo\nthree'>
  <$bar>
 
-==== Line Continuation: \{\\} and \{\\\}
+==== Line Continuation: {\\} and {\\\}
 
 To continue a line, use `{\\}`. To also clobber leading whitespace on
 the next line, use `{\\\}`.
@@ -183,6 +190,14 @@ and also as
 All three render as
 
  <$SHELL>> <!echo -e 'a\nb\nc'>. <./hello.txt>
+
+// {$SHELL}> {\\}
+//{!echo -e 'a\nb\nc'}. {\\}
+//{./hello.txt}
+
+// {$SHELL}> {\\\}
+//     {!echo -e 'a\nb\nc'}. {\\\}
+//     {./hello.txt}
 
 === Line Interpolation
 
@@ -223,7 +238,7 @@ and
 
  <$SHELL>> <<!echo -e 'a\nb\nc' | cat -n | join - <(cat -n hello.txt)><2:>
 
-=== Braces: \{\{}} <$LB>/> [] @@ …
+=== Braces: {{}} <$LB>/> [] @@ …
 
 If your template contains curly braces, you can set the `$SEMPL_BRACES`
 environment variable to avoid ambiguities.
@@ -267,7 +282,7 @@ same as
 
  echo 'My shell is {$SHELL}' | sempl
 
-If SOURCE contains ``\{'' followed by ``}'', it is interpreted as a
+If SOURCE contains ``{'' followed by ``}'', it is interpreted as a
 template
 
  sempl 'My shell is {$SHELL}'
@@ -306,3 +321,7 @@ Normally, Sempl works by generating and running a shell script to
 produce output. If `$SEMPL_DUMP` is set to anything other than ``0'' or
 ““, Sempl will instead write the shell script to DEST.sh without running
 it.
+
+//=== Examples
+
+// vim: ft=asciidoc
