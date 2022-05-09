@@ -91,7 +91,7 @@ Only stdin is captured. To capture stderr, use shell redirection.
  $ echo -e 'en\nid\nic' | sempl 'V{-}i,'
  <!echo -e 'en\nid\nic' | SEMPL_BRACES='{}' ./bin/sempl 'V{-}i,'>
 
-=== Fields: {<$envvar} {<!command} {</file} {<.file} {<\-} {N,N:,N:M,:M,…}
+=== Fields: {<$envvar} {<!command} {</file} {<.file} {\<-} {N,N:,N:M,:M,…}
 
 `{<param}` produces no output by itself. Instead, it interpolates fields
 from each line of `{param}` into the template’s current line using a
