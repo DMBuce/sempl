@@ -72,8 +72,8 @@ This also works with relative paths that start with `.` <#and home directories>.
 <# {~/path/to/file/in/home} >
 <# {~user/path/to/file/in/user/home} >
 
-Note that each line of the file is interpolated into the line in the
-template. All basic parameters -- `{$envvar} {/file} {!command} {-}` --
+Note that each line of the file is interpolated into the line in the template.
+All basic parameters -- `{$envvar}`, `{/file}`, `{!command}`, and `{-}` --
 undergo line interpolation.
 
 ==== Commands: {!command}
