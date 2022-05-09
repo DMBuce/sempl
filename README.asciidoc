@@ -83,7 +83,7 @@ on my system, renders as
 
 Only stdin is captured. To capture stderr, use shell redirection.
 
-==== Stdin:
+==== Stdin: {-}
 
  $ echo -e 'en\nid\nic' | sempl 'V{-}i,'
  Veni,
