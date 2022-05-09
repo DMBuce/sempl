@@ -303,19 +303,19 @@ Sempl sets certain environment variables that can be used within
 templates. Other environment variables can be used to control Sempl’s
 behavior.
 
-===== $SRC, $DEST
+**$SRC, $DEST**::
 
 These environment variables refer to the SRC and DEST passed to Sempl on
 the command line. They default to "-" and can’t be overriden in the
 frontmatter, nor by passing them in from the environment of the process
 that launches sempl.
 
-===== $SEMPL_BRACES
+**$SEMPL_BRACES**::
 
 Sets the braces that surround parameters. See the "Braces" section
 above for details.
 
-===== $SEMPL_DUMP
+**$SEMPL_DUMP**::
 
 Normally, Sempl works by generating and running a shell script to
 produce output. If `$SEMPL_DUMP` is set to anything other than "0" or
