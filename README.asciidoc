@@ -322,7 +322,8 @@ behavior.
 
 **$SRC, $DEST**::
 
-These environment variables refer to the SRC and DEST passed to Sempl on
+These environment variables respectively refer to
+the source template and destination file passed to Sempl on
 the command line. They default to "-" and can’t be overriden in the
 frontmatter, nor by passing them in from the environment of the process
 that launches sempl.
