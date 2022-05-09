@@ -277,12 +277,12 @@ Read a template on stdin and render it on stdout:
 
  echo 'My shell is {$SHELL}' | sempl - -
 
-By default, SOURCE and DEST are both ``-'', so the above example is the
+By default, SOURCE and DEST are both "-", so the above example is the
 same as
 
  echo 'My shell is {$SHELL}' | sempl
 
-If SOURCE contains ``{'' followed by ``}'', it is interpreted as a
+If SOURCE contains "{" followed by "}", it is interpreted as a
 template
 
  sempl 'My shell is {$SHELL}'
@@ -306,20 +306,20 @@ behavior.
 ===== $SRC, $DEST
 
 These environment variables refer to the SRC and DEST passed to Sempl on
-the command line. They default to ``-'' and can’t be overriden in the
+the command line. They default to "-" and can’t be overriden in the
 frontmatter, nor by passing them in from the environment of the process
 that launches sempl.
 
 ===== $SEMPL_BRACES
 
-Sets the braces that surround parameters. See the ``Braces'' section
+Sets the braces that surround parameters. See the "Braces" section
 above for details.
 
 ===== $SEMPL_DUMP
 
 Normally, Sempl works by generating and running a shell script to
-produce output. If `$SEMPL_DUMP` is set to anything other than ``0'' or
-““, Sempl will instead write the shell script to DEST.sh without running
+produce output. If `$SEMPL_DUMP` is set to anything other than "0" or
+"", Sempl will instead write the shell script to DEST.sh without running
 it.
 
 //=== Examples
