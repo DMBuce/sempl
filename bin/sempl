@@ -35,6 +35,8 @@ if (
 my $in;
 if ($src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/) {
 	open($in, "<", \$src) or die $!;
+} elsif ($src eq "-") {
+	$in = \*STDIN or die $!;
 } else {
 	open($in, "<", $src) or die $!;
 }
