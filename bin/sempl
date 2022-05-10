@@ -20,7 +20,12 @@ my $dest = shift || "-";
 
 # make sure $src and $dest are not the same file
 # TODO: make check works on windows
-if ( $^O ne "MSWin32" and my ($dev1, $ino1) = (stat $dest)[0, 1] ) {
+if (
+	$^O ne "MSWin32"
+	and $src ne "-"
+	and $dest ne "-"
+	and my ($dev1, $ino1) = (stat $dest)[0, 1]
+) {
 	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$!";
 	die "'$src' and '$dest' are the same file" if $dev1 == $dev2 && $ino1 == $ino2;
 }
