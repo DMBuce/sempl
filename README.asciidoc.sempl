@@ -331,5 +331,9 @@ produce output. If `$SEMPL_DUMP` is set to anything other than "0" or
 it.
 
 //=== Examples
+//
+// * https://github.com/DMBuce/bucepack/blob/05d6df71cde88aecd00c38324a7e40689bd1090c/bin/mk-fireworks.sh[Before]
+// * https://github.com/DMBuce/bucepack/blob/master/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[After]
+// * https://github.com/DMBuce/bucepack/blob/master/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml[Output]
 
 // vim: ft=asciidoc

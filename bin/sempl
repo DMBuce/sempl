@@ -24,6 +24,7 @@ if (
 	$^O ne "MSWin32"
 	and $src ne "-"
 	and $dest ne "-"
+	and not $src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/
 	and my ($dev1, $ino1) = (stat $dest)[0, 1]
 ) {
 	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$!";
