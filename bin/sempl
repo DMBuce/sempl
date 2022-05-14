@@ -76,8 +76,11 @@ $ENV{LB} ||= $ENV{RB};
 
 # open output handle
 my $out;
-if ($ENV{SEMPL_DUMP}) {
-	# write shell script to dest without executing it
+if ($ENV{SEMPL_DUMP} and $dest eq "-") {
+	# write shell script to stdout without executing it
+	$out = \*STDOUT or die $!;
+} elsif ($ENV{SEMPL_DUMP}) {
+	# write shell script to dest.sh without executing it
 	open($out, ">", $dest.".sh") or die $!;
 } else {
 	# run shell script directly
