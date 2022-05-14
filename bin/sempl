@@ -144,25 +144,25 @@ sub process {
 	#my ($char, $param, $var, $fstring, $lvl) = @_;
 	if ($$char eq '$' and $$param =~ /^[a-zA-Z_][a-zA-Z0-9_]*$/) {
 		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
-		print $out "echo \"\$$$param\" | while read $$var; do\n";
+		print $out "echo \"\$$$param\" | while IFS= read -r $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
 	} elsif ($$char eq '/' or $$char eq '.') {
 		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;
 		$$param =~ s/'/'\\''/g;
-		print $out "cat -- '$$char$$param' | while read $$var; do\n";
+		print $out "cat -- '$$char$$param' | while IFS= read -r $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
 	} elsif ($$char eq '!') {
 		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
-		print $out "( $$param ) | while read $$var; do\n";
+		print $out "( $$param ) | while IFS= read -r $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
 	} elsif ($$char eq '-' and $$param eq "") {
 		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
 		my $stdin = do { local $/; <STDIN> };
 		$stdin =~ s/'/'\\''/g;
-		print $out "echo -n '$stdin' | while read $$var; do\n";
+		print $out "echo -n '$stdin' | while IFS= read -r $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
 		$$lvl++;
 	} elsif ($$char eq '<' and (

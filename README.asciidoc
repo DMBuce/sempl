@@ -143,7 +143,7 @@ unquoted values are interpreted literally.
 Quotes in quoted strings can be escaped in a way that the shell will
 understand.
 
- var3='escaped quotes aren'\''t pretty, but they'\''re possible'
+ var3='escaped quotes aren'\\''t pretty, but they'\\''re possible'
 
 === Continuation
 
@@ -247,7 +247,7 @@ respectively render as
 
  /bin/bash> a Hello world,
  /bin/bash> b how are you?
- /bin/bash> c
+ /bin/bash> c 
 
 and
 
@@ -347,10 +347,29 @@ produce output. If `$SEMPL_DUMP` is set to anything other than "0" or
 "", Sempl will instead write the shell script to DEST.sh without running
 it.
 
-//=== Examples
-//
-// * https://github.com/DMBuce/bucepack/blob/05d6df71cde88aecd00c38324a7e40689bd1090c/bin/mk-fireworks.sh[Before]
-// * https://github.com/DMBuce/bucepack/blob/master/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[After]
-// * https://github.com/DMBuce/bucepack/blob/master/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml[Output]
+=== Examples
+
+Some real-world examples where I replaced annoying scripts in my
+projects with Sempl.
+
+In my
+https://github.com/DMBuce/bucepack/tree/5631a3796c35ccdb9eb0091fb2c7658827947145#mythic-relics[Mythic Relics]
+minecraft datapack, I needed to generate a JSON loot table with 784 firework
+entry, one for almost every possible combination of shape, flicker state,
+trail effect, color, and fade color.
+Here is how I did that at first with shell and later with Sempl, along with
+the output data.
+
+* https://github.com/DMBuce/bucepack/blob/05d6df71cde88aecd00c38324a7e40689bd1090c/bin/mk-fireworks.sh[Before]
+* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[After]
+* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml[Output]
+
+Here, I am generating some data for my
+https://github.com/DMBuce/bucepack/tree/73c69a14c90a585ac39ca54d198efa343fb3be8d#dragonproof-end[Dragonproof]
+datapack that automatically includes all magenta blocks in the game.
+
+* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/bin/update-dragonproof.sh[Before]
+* https://github.com/DMBuce/bucepack/blob/78fd32afc0ae00d432f9972ad379561d2d469386/data/minecraft/tags/blocks/dragon_immune.json.sempl[After]
+* https://github.com/DMBuce/bucepack/blob/78fd32afc0ae00d432f9972ad379561d2d469386/data/minecraft/tags/blocks/dragon_immune.json[Output]
 
 // vim: ft=asciidoc
