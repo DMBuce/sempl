@@ -1,0 +1,8 @@
+
+Check that $PATH is set correctly
+PATH="./bin:$PATH"
+
+Check that we're using the right `sempl`
+{!which sempl | sed "s,^$(git rev-parse --show-toplevel),\$gitroot,"}:
+  =>$gitroot/bin/sempl<=
+

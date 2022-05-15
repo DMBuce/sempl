@@ -1,0 +1,10 @@
+#!/bin/bash -x
+# test sempl command line features
+
+# TODO:
+# arguments
+# options
+# environment variables
+# * DUMP w/ "-" dest
+#
+

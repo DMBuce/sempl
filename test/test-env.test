@@ -1,0 +1,12 @@
+#!/usr/bin/env sempl
+# check runtime environment of the tests
+SEMPL_BRACES={{}}
+#!end sempl env
+
+Check that $PATH is set correctly
+PATH="{{!grep -o '^\./bin:' <<< "$PATH"}}$PATH"
+
+Check that we're using the right `sempl`
+{!which sempl | sed "s,^$(git rev-parse --show-toplevel),\$gitroot,"}:
+  =>{{!which sempl | sed "s,$(git rev-parse --show-toplevel),\$gitroot,"}}<=
+

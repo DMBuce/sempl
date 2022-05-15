@@ -1,0 +1,32 @@
+
+# many language features are tested by the readme,
+# so i haven't bothered including them here yet
+#
+# TODO:
+# parameters
+# frontmatter
+# parameters
+# line interpolation
+
+Make sure non-shell-identifiers aren't expanded
+{$invalid.identifier}: =>{{$invalid.identifier}}<=
+
+Check strictness of stdin parameter
+{-invalid-stdin}: =>{{-invalid-stdin}}<=
+
+Make sure field read parameter only expands other parameters
+{<invalid parameter}: =>{{<invalid parameter}}<=
+
+Check strictness of field cut parameter
+{::2}: =>{{::2}}<=
+
+Check missing variable
+{$unset_variable}: =><=
+
+Check missing files
+cat: /nonexistent/file: No such file or directory
+cat: ./nonexistent/file: No such file or directory
+
+Check missing command
+bash: line 37: command-not-found: command not found
+
