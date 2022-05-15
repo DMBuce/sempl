@@ -26,6 +26,7 @@ Check strictness of field cut parameter
 
 Check missing variable
 {$unset_variable}: =>{{$unset_variable}}<=
+  Note: error message will appear at beginning of test output
 
 Check missing files
 {/nonexistent/file}: =>{{/nonexistent/file}}<=
