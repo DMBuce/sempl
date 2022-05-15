@@ -1,0 +1,21 @@
+Template source is stdin: OK
+Template source is -: OK
+Template source is arg: OK
+Template source is file: OK
+Template dest is stdin: OK
+Template dest is -: OK
+Template dest is file, no output expected:
+File from previous test has output: OK
+Template dest can be overwritten: STILL OK
+Source and dest can't be the same, error expected: '/tmp/sempl.test' and '/tmp/sempl.test' are the same file at ./bin/sempl line 31.
+Test $SEMPL_BRACES: OK
+Test $LB: {$check}
+Test $RB, TODO fix this: {$check{$RB}
+Test $SEMPL_DUMP: echo "$check" | while IFS= read -r a; do
+echo ''"$a"''
+done
+Test $SEMPL_DUMP writing to dest, no output expected:
+File from previous test has output: exec >"/tmp/sempl.test"
+echo "$check" | while IFS= read -r a; do
+echo ''"$a"''
+done

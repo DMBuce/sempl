@@ -6,11 +6,7 @@ SEMPL_BRACES={{}}
 # many language features are tested by the readme,
 # so i haven't bothered including them here yet
 #
-# TODO:
-# parameters
-# frontmatter
-# parameters
-# line interpolation
+# TODO: parameters, frontmatter, continuation, line interpolation, etc.
 
 Make sure non-shell-identifiers aren't expanded
 {$invalid.identifier}: =>{{$invalid.identifier}}<=

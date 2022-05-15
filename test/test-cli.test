@@ -1,10 +1,60 @@
-#!/bin/bash -x
-# test sempl command line features
-
-# TODO:
-# arguments
-# options
-# environment variables
-# * DUMP w/ "-" dest
+#!/bin/bash
+# test sempl interface
 #
+# TODO: test options once they're added
+
+export template='{$check}'
+export check=OK
+export tmpfile=/tmp/sempl.test
+
+echo -n "Template source is stdin: "
+echo "$template" | sempl
+
+echo -n "Template source is -: "
+echo "$template" | sempl -
+
+echo -n "Template source is arg: "
+sempl "$template"
+
+echo -n "Template source is file: "
+sempl <(echo "$template")
+
+echo -n "Template dest is stdin: "
+echo "$template" | sempl -
+
+echo -n "Template dest is -: "
+echo "$template" | sempl - -
+
+echo "Template dest is file, no output expected:"
+rm -f "$tmpfile"
+sempl "$template" "$tmpfile"
+
+echo -n "File from previous test has output: "
+cat "$tmpfile"
+
+echo -n "Template dest can be overwritten: "
+check='STILL OK' sempl "$template" "$tmpfile"
+cat "$tmpfile"
+
+echo -n "Source and dest can't be the same, error expected: "
+sempl "$tmpfile" "$tmpfile"
+
+echo -n "Test \$SEMPL_BRACES: "
+SEMPL_BRACES='{{}}' sempl '{{$check}}'
+
+echo -n "Test \$LB: "
+sempl '{$LB}$check}'
+
+echo -n "Test \$RB, TODO fix this: "
+sempl '{$check{$RB}'
+
+echo -n "Test \$SEMPL_DUMP: "
+SEMPL_DUMP=1 sempl "$template"
+
+echo "Test \$SEMPL_DUMP writing to dest, no output expected:"
+rm -f "$tmpfile.sh"
+SEMPL_DUMP=1 sempl "$template" "$tmpfile"
+
+echo -n "File from previous test has output: "
+cat "$tmpfile.sh"
 
