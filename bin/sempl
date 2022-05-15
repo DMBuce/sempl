@@ -146,7 +146,7 @@ sub process {
 	my $lvl     = shift;
 	#my ($char, $param, $var, $fstring, $lvl) = @_;
 	if ($$char eq '$' and $$param =~ /^[a-zA-Z_][a-zA-Z0-9_]*$/) {
-		print STDERR "Unset environment variable: \$$$param\n" if not $ENV{$$param};
+		warn "Unset environment variable: \$$$param\n" if not $ENV{$$param};
 		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
 		print $out "echo \"\$$$param\" | while IFS= read -r $$var; do\n";
 		$$fstring .= "\"\$$$var\"";
