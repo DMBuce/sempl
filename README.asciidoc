@@ -349,8 +349,7 @@ it.
 
 === Examples
 
-Some real-world examples where I replaced annoying scripts in my
-projects with Sempl.
+Some real-world examples showing how I use Sempl in my projects.
 
 My
 https://github.com/DMBuce/bucepack/tree/73c69a14c90a585ac39ca54d198efa343fb3be8d#dragonproof[Dragonproof]
