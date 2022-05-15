@@ -70,9 +70,9 @@ $(DESTDIR)$(bindir)/%: bin/%
 
 # based on https://chrismorgan.info/blog/make-and-git-diff-test-harness/
 %.out: %.test
-	./$< > $@ 2>&1 \
-		|| (touch --date=@0 $@; false)
-	git diff --exit-code --src-prefix=expected: --dst-prefix=actual: \
+	@./$< > $@ 2>&1 \
+		|| (echo "$< exit status: $$?"; touch --date=@0 $@; false)
+	@git diff --exit-code --src-prefix=expected: --dst-prefix=actual: \
 		$@ \
 		|| (touch --date=@0 $@; false)
 
