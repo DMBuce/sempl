@@ -339,11 +339,10 @@ My
 https://github.com/DMBuce/bucepack/tree/73c69a14c90a585ac39ca54d198efa343fb3be8d#dragonproof[Dragonproof]
 minecraft datapack needs to include all magenta blocks in the game
 in one of its files.
-Here is how I did that at first with shell and later with Sempl,
-along with the output data.
+Here is the Sempl template I used to do that,
+along with its output.
 
-* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/bin/update-dragonproof.sh[Before]
-* https://github.com/DMBuce/bucepack/blob/78fd32afc0ae00d432f9972ad379561d2d469386/data/minecraft/tags/blocks/dragon_immune.json.sempl[After]
+* https://github.com/DMBuce/bucepack/blob/78fd32afc0ae00d432f9972ad379561d2d469386/data/minecraft/tags/blocks/dragon_immune.json.sempl[Template]
 * https://github.com/DMBuce/bucepack/blob/78fd32afc0ae00d432f9972ad379561d2d469386/data/minecraft/tags/blocks/dragon_immune.json[Output]
 
 Here, I am generating 784 different permutations of various firework properties
@@ -351,8 +350,7 @@ for a loot table in my
 https://github.com/DMBuce/bucepack/tree/5631a3796c35ccdb9eb0091fb2c7658827947145#mythic-relics[Mythic Relics]
 datapack.
 
-* https://github.com/DMBuce/bucepack/blob/05d6df71cde88aecd00c38324a7e40689bd1090c/bin/mk-fireworks.sh[Before]
-* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[After]
+* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[Template]
 * https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml[Output]
 
 // vim: ft=asciidoc
