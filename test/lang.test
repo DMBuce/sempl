@@ -31,3 +31,9 @@ Check missing files
 Check missing command
 {!command-not-found}: =>{{!command-not-found}}<=
 
+Check field ranges
+{<./madlibs.dat} {:2} {4:5} {7} {9:}: =>{{<./madlibs.dat}}{{:2}} {{4:5}} {{7}} {{9:}}<=
+
+Check multiple field ranges
+{<./madlibs.dat} {:2,4:5,7,9:}: =>{{<./madlibs.dat}} {{:2,4:5,7,9:}}<=
+

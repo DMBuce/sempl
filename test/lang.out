@@ -28,3 +28,11 @@ cat: ./nonexistent/file: No such file or directory
 Check missing command
 bash: line 34: command-not-found: command not found
 
+Check field ranges
+{<./madlibs.dat} {:2} {4:5} {7} {9:}: =>little cat big dog a for it<=
+{<./madlibs.dat} {:2} {4:5} {7} {9:}: =>fast dog slow cat it <=
+
+Check multiple field ranges
+{<./madlibs.dat} {:2,4:5,7,9:}: => little cat big dog a for it<=
+{<./madlibs.dat} {:2,4:5,7,9:}: => fast dog slow cat it <=
+
