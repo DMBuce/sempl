@@ -19,3 +19,17 @@ File from previous test has output: exec >"/tmp/sempl.test"
 while IFS= read -r a; do
 echo ''"$a"''
 done <<< "$check"
+Template that uses stdin multiple times:a
+b
+aa
+ab
+ba
+bb
+aaa
+aab
+aba
+abb
+baa
+bab
+bba
+bbb

@@ -58,3 +58,6 @@ SEMPL_DUMP=1 sempl "$template" "$tmpfile"
 echo -n "File from previous test has output: "
 cat "$tmpfile.sh"
 
+echo -n "Template that uses stdin multiple times:"
+echo $'a\nb' | ./bin/sempl $'{-}\n{-}{-}\n{-}{-}{-}'
+

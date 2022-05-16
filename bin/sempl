@@ -243,11 +243,12 @@ sub handle_command {
 }
 
 # {-} handler
+my $stdin;
 sub handle_stdin {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
 	# print start of loop
-	my $stdin = do { local $/; <STDIN> };
+	$stdin ||= do { local $/; <STDIN> };
 	chomp $stdin;
 	$stdin =~ s/'/'\\''/g;
 	print $out "while IFS= read -r $var; do\n";

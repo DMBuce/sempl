@@ -8,6 +8,12 @@ SEMPL_BRACES={{}}
 #
 # TODO: parameters, frontmatter, continuation, line interpolation, etc.
 
+Check field ranges
+{<./madlibs.dat} {:2} {4:5} {7} {9:}: =>{{<./madlibs.dat}}{{:2}} {{4:5}} {{7}} {{9:}}<=
+
+Check multiple field ranges
+{<./madlibs.dat} {:2,4:5,7,9:}: =>{{<./madlibs.dat}} {{:2,4:5,7,9:}}<=
+
 Make sure non-shell-identifiers aren't expanded
 {$invalid.identifier}: =>{{$invalid.identifier}}<=
 
@@ -30,10 +36,4 @@ Check missing files
 
 Check missing command
 {!command-not-found}: =>{{!command-not-found}}<=
-
-Check field ranges
-{<./madlibs.dat} {:2} {4:5} {7} {9:}: =>{{<./madlibs.dat}}{{:2}} {{4:5}} {{7}} {{9:}}<=
-
-Check multiple field ranges
-{<./madlibs.dat} {:2,4:5,7,9:}: =>{{<./madlibs.dat}} {{:2,4:5,7,9:}}<=
 

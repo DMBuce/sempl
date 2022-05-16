@@ -1,0 +1,12 @@
+Test cross joining 100 lines with 1000 (host=football)
+real	1.648
+usr	1.142
+sys	0.540
+usr+sys	1.682
+
+Test cross joining 1000 lines with 100 (host=football)
+real	2.401
+usr	2.386
+sys	0.334
+usr+sys	2.72
+
