@@ -1,0 +1,53 @@
+#!/bin/bash
+# test sempl interface
+#
+# TODO: test options once they're added
+
+export dict=/usr/share/dict/words
+
+TIMEFORMAT=$'real\t%3R\nusr\t%3U\nsys\t%3S'
+datfile="${0%.test}.dat"
+hostname="$(hostname -s)"
+
+:> "$datfile"
+
+perftest() {
+	local display="$1"
+	local cmd="$2"
+	local real="$3"
+	local usrsys="$4"
+
+	# run test
+	echo "$display"
+	echo "$display" >> "$datfile"
+	eval "time $cmd" 2>> "$datfile"
+
+	# process thresholds
+	awk '
+		/^real/ { real = $2 }
+		/^usr/ { usr = $2 }
+		/^sys/  { sys  = $2 }
+		END {
+			opreal = "<"
+			if (real >= '"$real"') opreal = ">="
+			opusrsys = "<"
+			if (usr+sys >= '"$usrsys"') opusrsys = ">="
+			print "real",    opreal,    '"$real"'
+			print "user+sys", opusrsys, '"$usrsys"'
+			print "usr+sys\t" usr+sys >> "'"$datfile"'"
+		}
+	' < <(tail -n3 "$datfile")
+
+	echo >> "$datfile"
+}
+
+# test joining 100 rows with 10000
+perftest "Test cross joining 100 lines with 1000 (host=$hostname)" \
+	"./bin/sempl '{!head -n100 \$dict} {!head -n1000 \$dict}' >/dev/null" \
+	1.7 1.7
+
+# test joining 10000 rows with 100
+perftest "Test cross joining 1000 lines with 100 (host=$hostname)" \
+	"./bin/sempl '{!head -n1000 \$dict} {!head -n100 \$dict}'  >/dev/null" \
+	2.5 2.8
+
