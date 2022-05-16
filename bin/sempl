@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use File::Temp qw/ tempdir /;
+
 # define some vars
 my $prog = (split(/\//, $0))[-1];
 my $usage = "Syntax: $prog [SRC] [DEST]\n";
@@ -28,7 +30,7 @@ if (
 	and my ($dev1, $ino1) = (stat $dest)[0, 1]
 ) {
 	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$!";
-	die "'$src' and '$dest' are the same file" if $dev1 == $dev2 && $ino1 == $ino2;
+	die "$prog: '$src' and '$dest' are the same file" if $dev1 == $dev2 && $ino1 == $ino2;
 }
 
 # open input file
@@ -84,13 +86,17 @@ if ($ENV{SEMPL_DUMP} and $dest eq "-") {
 	open($out, ">", $dest.".sh") or die $!;
 } else {
 	# run shell script directly
-	open($out, "|-", "bash -e") or die "$!";
+	open($out, "|-", "bash") or die "$!";
 }
 
 # send all output to dest
 if ($dest ne "-") {
 	print $out "exec >\"$dest\"\n";
 }
+
+# create temp dir for caching command output
+my $tmpdir = $ENV{TMPDIR} || "/tmp";
+my $cachedir = tempdir("$tmpdir/$prog.XXXXXXXXXX", CLEANUP => 1);
 
 # define some regexes
 my $lb          = "\Q$ENV{LB}\E";
@@ -186,32 +192,33 @@ sub handle_envvar {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
 	$param =~ s/^\$//;
-	warn "Unset environment variable: \$$param\n" if not $ENV{$param};
+	warn "$prog: Unset environment variable: \$$param\n" if not $ENV{$param};
 	# print start of loop
-	print $out "echo \"\$$param\" | while IFS= read -r $var; do\n";
+	print $out "while IFS= read -r $var; do\n";
 	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
 	# process the rest of the line
 	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
 	$var++ unless $var =~ /^_/;
 	process($line, $in, $out, $var, $echo);
 	# print end of loop
-	print $out "done\n";
+	print $out "done <<< \"\$$param\"\n";
 }
 
 # {/file} and {.file} handler
 sub handle_file {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
+	# TODO: check if file exists?
 	# print start of loop
 	$param =~ s/'/'\\''/g;
-	print $out "cat -- '$param' | while IFS= read -r $var; do\n";
+	print $out "while IFS= read -r $var; do\n";
 	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
 	# process the rest of the line
 	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
 	$var++ unless $var =~ /^_/;
 	process($line, $in, $out, $var, $echo);
 	# print end of loop
-	print $out "done\n";
+	print $out "done < '$param'\n";
 }
 
 # {!command} handler
@@ -220,14 +227,19 @@ sub handle_command {
 	my ($line, $in, $out, $var, $echo, $param) = @_;
 	$param =~ s/^!//;
 	# print start of loop
-	print $out "( $param ) | while IFS= read -r $var; do\n";
+	my $datfile = "$param.dat";
+	$datfile =~ s/'/'\\''/g;
+	$datfile =~ s/\//_/g;
+	$datfile = "$cachedir/$datfile";
+	print $out "[[ ! -e '$datfile' ]] && $param > '$datfile' \n";
+	print $out "while IFS= read -r $var; do\n";
 	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
 	# process the rest of the line
 	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
 	$var++ unless $var =~ /^_/;
 	process($line, $in, $out, $var, $echo);
 	# print end of loop
-	print $out "done\n";
+	print $out "done < '$datfile'\n";
 }
 
 # {-} handler
@@ -236,15 +248,16 @@ sub handle_stdin {
 	my ($line, $in, $out, $var, $echo, $param) = @_;
 	# print start of loop
 	my $stdin = do { local $/; <STDIN> };
+	chomp $stdin;
 	$stdin =~ s/'/'\\''/g;
-	print $out "echo -n '$stdin' | while IFS= read -r $var; do\n";
+	print $out "while IFS= read -r $var; do\n";
 	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
 	# process the rest of the line
 	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
 	$var++ unless $var =~ /^_/;
 	process($line, $in, $out, $var, $echo);
 	# print end of loop
-	print $out "done\n";
+	print $out "done <<< '$stdin'\n";
 }
 
 # {<param} handler

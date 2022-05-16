@@ -330,6 +330,11 @@ produce output. If `$SEMPL_DUMP` is set to anything other than "0" or
 "", Sempl will instead write the shell script to DEST.sh without running
 it.
 
+**$TMPDIR**::
+
+Sempl creates a temporary folder in this directory to cache `{!command}`
+output in. Defaults to `/tmp`.
+
 === Examples
 
 Some real-world examples showing how I use Sempl in my projects.

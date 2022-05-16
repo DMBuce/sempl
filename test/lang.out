@@ -1,4 +1,4 @@
-Unset environment variable: $unset_variable
+sempl: Unset environment variable: $unset_variable
 
 # many language features are tested by the readme,
 # so i haven't bothered including them here yet
@@ -22,8 +22,8 @@ Check missing variable
   Note: error message will appear at beginning of test output
 
 Check missing files
-cat: /nonexistent/file: No such file or directory
-cat: ./nonexistent/file: No such file or directory
+bash: line 28: /nonexistent/file: No such file or directory
+bash: line 31: ./nonexistent/file: No such file or directory
 
 Check missing command
 bash: line 34: command-not-found: command not found
