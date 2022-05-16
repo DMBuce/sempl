@@ -19,7 +19,7 @@ my $src = shift || "-";
 my $dest = shift || "-";
 
 # make sure $src and $dest are not the same file
-# TODO: make check works on windows
+# TODO: make check work on windows
 if (
 	$^O ne "MSWin32"
 	and $src ne "-"
@@ -92,116 +92,207 @@ if ($dest ne "-") {
 	print $out "exec >\"$dest\"\n";
 }
 
+# define some regexes
+my $lb          = "\Q$ENV{LB}\E";
+my $rb          = "\Q$ENV{RB}\E";
+my $re_comment  = "#.*?";
+my $re_envvar   = "\\\$[a-zA-Z_][a-zA-Z0-9_]*?";
+my $re_file     = "[/.].*?";
+my $re_command  = "!.*?";
+my $re_stdin    = "-";
+my $re_basic    = "$re_envvar|$re_file|$re_command|$re_stdin";
+my $re_read     = "<($re_basic)";
+my $re_num      = "-?\\d+";
+my $re_range    = "$re_num|$re_num:|$re_num:$re_num|:$re_num";
+my $re_ranges   = "$re_range(,$re_range)*";
+my $re_continue = "\\\\{1,3}";
+my $re_param    = "($lb$re_continue$rb\$|$lb($re_comment|$re_basic|$re_read|$re_ranges)$rb)";
+#                  ^                        ^                      ^        ^
+#                  |                        |                      |        | $re_ranges = $re_range(,$re_range)*
+#                  |                        |                      |          $4 = additional ranges, not useful
+#                  |                        |                      | $re_read = <($re_basic)
+#                  |                        |                        $3 = basic param
+#                  |                        | $2 = non-continue param
+#                  | $1 = full match
+
+# regex dispatch table
+my $dispatch = {
+	$re_comment  => \&handle_comment,
+	$re_envvar   => \&handle_envvar,
+	$re_file     => \&handle_file,
+	$re_command  => \&handle_command,
+	$re_stdin    => \&handle_stdin,
+	$re_read     => \&handle_read,
+	$re_ranges   => \&handle_ranges,
+	$re_continue => \&handle_continue,
+};
+
 # process template body
+#
+# pseudocode:
+#
+#while read $line
+#	process($line, $in, $out, $echo = "") = {
+#		if $line has unprocessed matches
+#			extract and remove $text, $param from $line
+#			dispatch($line, $in, $out, $echo = $echo.$text, $param) = {
+#				print start of loop
+#				process($line, $in, $out, $echo)
+#				print end of loop
+#			}
+#		else
+#			print echo $echo.$line
+#	}
+#
 do {
-	# tokenize string and process it
-	my $var = '';
-	my $fstring = '';
-	my $lvl = 0;
 	chomp $line;
-	my $chars="#\$/.!<0-9:-";
-	while ($line =~ /(\Q$ENV{LB}\E(\\{1,3})\Q$ENV{RB}\E$|\Q$ENV{LB}\E([$chars])(.*?)\Q$ENV{RB}\E)/pg) {
-		my $match = $1;
-		my $cont = $2;
-		my $char = $3;
-		my $param = $4;
-		my $text = ${^PREMATCH};
-		my $t = $text;
-		$t =~ s/'/'\\''/g;
-		$fstring .= "'$t'";
-		if (defined $cont) {
-			$line = <$in>;
-			chomp $line;
-			$line =~ s/^\s+// if $cont eq "\\\\\\";
-			$fstring .= "\$'\\n'" if $cont eq "\\";
-			next;
-		} elsif (
-			( $char eq '$' and not $param =~ /^[a-zA-Z_][a-zA-Z0-9_]*$/ )
-			or ( $char eq '-' and $param ne "" )
-		) {
-			my $m = $match;
-			$m =~ s/'/'\\''/g;
-			$fstring .= "'$m'";
-		} elsif ($char ne '#') {
-			process(\$char, \$param, \$var, \$fstring, \$lvl);
-		}
-		$line =~ s/^\Q$text$match\E//;
-	}
-	$line =~ s/'/'\\''/g;
-	$fstring .= "'$line'";
-	my @vars = map "\"\$$_\"", 'a'..$var;
-	print $out "echo $fstring\n";
-	print $out "done\n" for 1..$lvl;
+	process(\$line, $in, $out, "a", "'");
 } while ($line = <$in>);
 
 # close files
 close $out;
 close $in;
 
+# processes a line
 sub process {
-	my $char    = shift;
-	my $param   = shift;
-	my $var     = shift;
-	my $fstring = shift;
-	my $lvl     = shift;
-	#my ($char, $param, $var, $fstring, $lvl) = @_;
-	if ($$char eq '$' and $$param =~ /^[a-zA-Z_][a-zA-Z0-9_]*$/) {
-		warn "Unset environment variable: \$$$param\n" if not $ENV{$$param};
-		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
-		print $out "echo \"\$$$param\" | while IFS= read -r $$var; do\n";
-		$$fstring .= "\"\$$$var\"";
-		$$lvl++;
-	} elsif ($$char eq '/' or $$char eq '.') {
-		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;
-		$$param =~ s/'/'\\''/g;
-		print $out "cat -- '$$char$$param' | while IFS= read -r $$var; do\n";
-		$$fstring .= "\"\$$$var\"";
-		$$lvl++;
-	} elsif ($$char eq '!') {
-		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
-		print $out "( $$param ) | while IFS= read -r $$var; do\n";
-		$$fstring .= "\"\$$$var\"";
-		$$lvl++;
-	} elsif ($$char eq '-' and $$param eq "") {
-		$$var = $$var ? ++$$var : 'a' unless $$var =~ /^_/;;
-		my $stdin = do { local $/; <STDIN> };
-		$stdin =~ s/'/'\\''/g;
-		print $out "echo -n '$stdin' | while IFS= read -r $$var; do\n";
-		$$fstring .= "\"\$$$var\"";
-		$$lvl++;
-	} elsif ($$char eq '<' and (
-		$$param =~ /^[\/.!]/
-		or $$param =~ /^\$[a-zA-Z_][a-zA-Z0-9_]*$/
-		or $$param eq "-"
-	) ) {
-		$$param =~ /^(.)(.*)/;
-		my $c = $1;
-		my $p = $2;
-		my $junk = "";
-		process(\$c, \$p, \"_line", \$junk, $lvl);
-		print $out "read -a _arr <<< \"\$_line\"\n";
-	} elsif ($$char eq '0' and $$param eq "") { # {0}
-		$$fstring .= "\"\$_line\"";
-	} elsif ("$$char$$param" =~ /^(-?\d+:?|-?\d*:-?\d+)(,(-?\d+:?|-?\d*:-?\d+))*$/) { # {N,N:,N:M,:M,...}
-		for my $fields (split /,/, "$$char$$param") {
-			if ($fields =~ /^(-?\d+)$/) {
-				my $i = $1 - 1;
-				$$fstring .= "\"\${_arr[$i]}\"";
-			} elsif ($fields =~ /^(-?\d+):$/) {
-				my $i = $1 - 1;
-				$$fstring .= "\"\${_arr[@]:$i}\"";
-			} else {
-				my ($start, $end) = split /:/, $fields;
-				$start ||= 1;
-				$end ||= $start;
-				$start -= 1;
-				my $len = $end - $start;
-				$$fstring .= "\"\${_arr[@]:$start:$len}\"";
+	my ($line, $in, $out, $var, $echo) = @_;
+	if ($$line =~ /$re_param/p) {
+		my $param = $1;
+		my $text = ${^PREMATCH};
+		for my $k (keys %$dispatch) {
+			if ($param =~ /^$lb$k$rb$/) {
+				$$line =~ s/^\Q$text$param\E//;
+				$text =~ s/'/'\\''/g;
+				$param =~ s/^$lb//;
+				$param =~ s/$rb$//;
+				$dispatch->{$k}($line, $in, $out, $var, "$echo$text", $param);
+				last;
 			}
 		}
-	} else {
-		my $m = "$ENV{LB}$$char$$param$ENV{RB}";
-		$m =~ s/'/'\\''/g;
-		$$fstring .= "'$m'";
+	} else { # base case
+		$$line =~ s/'/'\\''/g;
+		print $out "echo $echo$$line'\n";
 	}
 }
+
+sub handle_comment {
+	pop @_;
+	process(@_);
+}
+
+sub handle_envvar {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	$param =~ s/^\$//;
+	warn "Unset environment variable: \$$param\n" if not $ENV{$param};
+	# print start of loop
+	print $out "echo \"\$$param\" | while IFS= read -r $var; do\n";
+	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
+	# process the rest of the line
+	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
+	$var++ unless $var =~ /^_/;
+	process($line, $in, $out, $var, $echo);
+	# print end of loop
+	print $out "done\n";
+}
+
+sub handle_file {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	# print start of loop
+	$param =~ s/'/'\\''/g;
+	print $out "cat -- '$param' | while IFS= read -r $var; do\n";
+	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
+	# process the rest of the line
+	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
+	$var++ unless $var =~ /^_/;
+	process($line, $in, $out, $var, $echo);
+	# print end of loop
+	print $out "done\n";
+}
+
+sub handle_command {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	$param =~ s/^!//;
+	# print start of loop
+	print $out "( $param ) | while IFS= read -r $var; do\n";
+	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
+	# process the rest of the line
+	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
+	$var++ unless $var =~ /^_/;
+	process($line, $in, $out, $var, $echo);
+	# print end of loop
+	print $out "done\n";
+}
+
+sub handle_stdin {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	# print start of loop
+	my $stdin = do { local $/; <STDIN> };
+	$stdin =~ s/'/'\\''/g;
+	print $out "echo -n '$stdin' | while IFS= read -r $var; do\n";
+	print $out "read -a _arr <<< \"\$$var\"\n" if $var =~ /^_/;
+	# process the rest of the line
+	$echo .= "'\"\$$var\"'" unless $var =~ /^_/;
+	$var++ unless $var =~ /^_/;
+	process($line, $in, $out, $var, $echo);
+	# print end of loop
+	print $out "done\n";
+}
+
+sub handle_read {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	# defer to basic param handler
+	$param =~ s/^<//;
+	for my $k (keys %$dispatch) {
+		if ($param =~ /^$k$/) {
+			$dispatch->{$k}($line, $in, $out, "_line", $echo, $param);
+			last;
+		}
+	}
+}
+
+sub handle_ranges {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	# figure out what fields to print
+	for my $fields (split /,/, $param) {
+		if ($fields =~ /^0$/) {
+			$echo .= "'\"\$_line\"'";
+
+		} elsif ($fields =~ /^($re_num)$/) {
+			my $n = $1 - 1;
+			$echo .= "'\"\${_arr[$n]}\"'";
+
+		} elsif ($fields =~ /^($re_num):$/) {
+			my $n = $1 - 1;
+			$echo .= "'\"\${_arr[@]:$n}\"'";
+
+		} elsif ($fields =~ /^:($re_num)$/) {
+			my $m = $1;
+			$echo .= "'\"\${_arr[@]:0:$m}\"'";
+
+		} elsif ($fields =~ /^($re_num):($re_num)$/) {
+			my $n = $1 - 1;
+			my $len = $2 - $n;
+			$echo .= "'\"\${_arr[@]:$n:$len}\"'";
+		}
+	}
+	# process the rest of the line
+	process($line, $in, $out, $var, $echo);
+}
+
+sub handle_continue {
+	# parse args
+	my ($line, $in, $out, $var, $echo, $param) = @_;
+	# read in the next line and continue processing
+	$$line = <$in>;
+	chomp $$line;
+	$$line =~ s/^\s+// if $param eq "\\\\\\";
+	$echo .= "'\$'\\n''" if $param eq "\\";
+	process($line, $in, $out, $var, $echo);
+}
+

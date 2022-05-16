@@ -10,7 +10,7 @@ Template dest can be overwritten: STILL OK
 Source and dest can't be the same, error expected: '/tmp/sempl.test' and '/tmp/sempl.test' are the same file at ./bin/sempl line 31.
 Test $SEMPL_BRACES: OK
 Test $LB: {$check}
-Test $RB, TODO fix this: {$check{$RB}
+Test $RB: {$check}
 Test $SEMPL_DUMP: echo "$check" | while IFS= read -r a; do
 echo ''"$a"''
 done

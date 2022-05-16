@@ -45,7 +45,7 @@ SEMPL_BRACES='{{}}' sempl '{{$check}}'
 echo -n "Test \$LB: "
 sempl '{$LB}$check}'
 
-echo -n "Test \$RB, TODO fix this: "
+echo -n "Test \$RB: "
 sempl '{$check{$RB}'
 
 echo -n "Test \$SEMPL_DUMP: "
