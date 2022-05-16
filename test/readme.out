@@ -8,7 +8,7 @@ into arbitrary text.
 Requires perl and bash shell.
 
 [[comment]]
-=== Comments:
+=== Comments: {#comment}
 
  Want to know a secret?{#This text won't render}
 
