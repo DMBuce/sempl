@@ -352,7 +352,7 @@ it.
 Some real-world examples showing how I use Sempl in my projects.
 
 My
-https://github.com/DMBuce/bucepack/tree/73c69a14c90a585ac39ca54d198efa343fb3be8d#dragonproof[Dragonproof]
+https://github.com/DMBuce/bucepack/tree/73c69a14c90a585ac39ca54d198efa343fb3be8d#dragonproof-end[Dragonproof]
 minecraft datapack needs to include all magenta blocks in the game
 in one of its files.
 Here is the Sempl template I used to do that,
