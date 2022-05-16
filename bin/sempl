@@ -175,11 +175,13 @@ sub process {
 	}
 }
 
+# {#comment} handler
 sub handle_comment {
 	pop @_;
 	process(@_);
 }
 
+# {$envvar} handler
 sub handle_envvar {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
@@ -196,6 +198,7 @@ sub handle_envvar {
 	print $out "done\n";
 }
 
+# {/file} and {.file} handler
 sub handle_file {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
@@ -211,6 +214,7 @@ sub handle_file {
 	print $out "done\n";
 }
 
+# {!command} handler
 sub handle_command {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
@@ -226,6 +230,7 @@ sub handle_command {
 	print $out "done\n";
 }
 
+# {-} handler
 sub handle_stdin {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
@@ -242,6 +247,7 @@ sub handle_stdin {
 	print $out "done\n";
 }
 
+# {<param} handler
 sub handle_read {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
@@ -255,6 +261,7 @@ sub handle_read {
 	}
 }
 
+# {N,N:,N:M,:M} handler
 sub handle_ranges {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
@@ -285,6 +292,7 @@ sub handle_ranges {
 	process($line, $in, $out, $var, $echo);
 }
 
+# {\} {\\} {\\\} handler
 sub handle_continue {
 	# parse args
 	my ($line, $in, $out, $var, $echo, $param) = @_;
