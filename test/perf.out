@@ -1,6 +1,6 @@
 Test cross joining 100 lines with 1000 (host=football)
-real < 1.7
-user+sys < 1.7
+real < 1.3
+user+sys < 1.3
 Test cross joining 1000 lines with 100 (host=football)
-real < 2.5
-user+sys < 2.8
+real < 1.3
+user+sys < 1.3

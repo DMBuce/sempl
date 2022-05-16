@@ -44,10 +44,10 @@ perftest() {
 # test joining 100 rows with 10000
 perftest "Test cross joining 100 lines with 1000 (host=$hostname)" \
 	"./bin/sempl '{!head -n100 \$dict} {!head -n1000 \$dict}' >/dev/null" \
-	1.7 1.7
+	1.3 1.3
 
 # test joining 10000 rows with 100
 perftest "Test cross joining 1000 lines with 100 (host=$hostname)" \
 	"./bin/sempl '{!head -n1000 \$dict} {!head -n100 \$dict}'  >/dev/null" \
-	2.5 2.8
+	1.3 1.3
 
