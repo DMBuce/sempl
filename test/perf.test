@@ -3,6 +3,17 @@
 #
 # TODO: test options once they're added
 
+# disabled
+cat <<-EOF
+	Test cross joining 100 lines with 1000 (host=football)
+	real < 1.3
+	user+sys < 1.3
+	Test cross joining 1000 lines with 100 (host=football)
+	real < 1.3
+	user+sys < 1.3
+EOF
+exit
+
 export dict=/usr/share/dict/words
 
 TIMEFORMAT=$'real\t%3R\nusr\t%3U\nsys\t%3S'
