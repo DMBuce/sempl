@@ -44,6 +44,7 @@ if ($src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/) {
 }
 
 # process frontmatter
+my $re_ident = "[a-zA-Z_][a-zA-Z0-9_]*?";
 my $line = <$in> || "";
 if ($line =~ /^#!.*$prog/) {
 	while ($line = <$in>) {
@@ -54,7 +55,7 @@ if ($line =~ /^#!.*$prog/) {
 			last;
 		} elsif ($line =~ /^#/) {
 			next;
-		} elsif ($line =~ /^\s*(.*?)\s*=\s*(.*)\s*$/) {
+		} elsif ($line =~ /^\s*($re_ident)\s*=\s*(.*)\s*$/) {
 			my $key = $1;
 			my $value = $2;
 			if ($value =~ /^'(.*)'$/) {
@@ -102,7 +103,9 @@ my $cachedir = tempdir("$tmpdir/$prog.XXXXXXXXXX", CLEANUP => 1);
 my $lb          = "\Q$ENV{LB}\E";
 my $rb          = "\Q$ENV{RB}\E";
 my $re_comment  = "#.*?";
-my $re_envvar   = "\\\$[a-zA-Z_][a-zA-Z0-9_]*?";
+# already defined above
+#my $re_ident = "[a-zA-Z_][a-zA-Z0-9_]*?";
+my $re_envvar   = "\\\$$re_ident";
 my $re_file     = "[/.].*?";
 my $re_command  = "!.*?";
 my $re_stdin    = "-";
