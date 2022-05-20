@@ -346,7 +346,7 @@ for a loot table in my
 https://github.com/DMBuce/bucepack/tree/5631a3796c35ccdb9eb0091fb2c7658827947145#mythic-relics[Mythic Relics]
 datapack.
 
-* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[Template]
-* https://github.com/DMBuce/bucepack/blob/5631a3796c35ccdb9eb0091fb2c7658827947145/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml[Output]
+* https://github.com/DMBuce/bucepack/blob/38b30c70268efc917dcb8c0ac7d3060f9993e249/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml.sempl[Template]
+* https://github.com/DMBuce/bucepack/blob/38b30c70268efc917dcb8c0ac7d3060f9993e249/buce-data/mythic/chromatic/fireworks.loot_table.json.yaml[Output]
 
 // vim: ft=asciidoc
