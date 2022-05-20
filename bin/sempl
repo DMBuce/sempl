@@ -29,18 +29,18 @@ if (
 	and not $src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/
 	and my ($dev1, $ino1) = (stat $dest)[0, 1]
 ) {
-	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$!";
-	die "$prog: '$src' and '$dest' are the same file" if $dev1 == $dev2 && $ino1 == $ino2;
+	my ($dev2, $ino2) = (stat $src)[0, 1] or die "$prog: $!\n";
+	die "$prog: '$src' and '$dest' are the same file\n" if $dev1 == $dev2 && $ino1 == $ino2;
 }
 
 # open input file
 my $in;
 if ($src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/) {
-	open($in, "<", \$src) or die $!;
+	open($in, "<", \$src) or die "$prog: $!\n";
 } elsif ($src eq "-") {
-	$in = \*STDIN or die $!;
+	$in = \*STDIN or die "$prog: $!\n";
 } else {
-	open($in, "<", $src) or die $!;
+	open($in, "<", $src) or die "$prog: $!\n";
 }
 
 # process frontmatter
@@ -59,13 +59,13 @@ if ($line =~ /^#!.*$prog/) {
 			my $key = $1;
 			my $value = $2;
 			$value =~ s/'/'\\''/g;
-			$value = `bash -c '$key=$value\necho -n "\$$key"'` or die $!;
+			$value = `bash -c '$key=$value\necho -n "\$$key"'` or die "$prog: $!\n";
 			$ENV{$key} = $value;
 		} elsif ($line =~ /^\s*($re_ident)\s*=\s*(\$?".*")\s*$/) {
 			my $key = $1;
 			my $value = $2;
 			$value =~ s/'/'\\''/g;
-			$value = `bash -c '$key=$value\necho -n "\$$key"'` or die $!;
+			$value = `bash -c '$key=$value\necho -n "\$$key"'` or die "$prog: $!\n";
 			$ENV{$key} = $value;
 		} elsif ($line =~ /^\s*($re_ident)\s*=\s*(.*)\s*$/) {
 			my $key = $1;
@@ -88,13 +88,13 @@ $ENV{LB} ||= $ENV{RB};
 my $out;
 if ($ENV{SEMPL_DUMP} and $dest eq "-") {
 	# write shell script to stdout without executing it
-	$out = \*STDOUT or die $!;
+	$out = \*STDOUT or die "$prog: $!\n";
 } elsif ($ENV{SEMPL_DUMP}) {
 	# write shell script to dest.sh without executing it
-	open($out, ">", $dest.".sh") or die $!;
+	open($out, ">", $dest.".sh") or die "$prog: $!\n";
 } else {
 	# run shell script directly
-	open($out, "|-", "bash") or die "$!";
+	open($out, "|-", "bash") or die "$prog: $!\n";
 }
 
 # send all output to dest

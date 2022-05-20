@@ -7,7 +7,7 @@ Template dest is -: OK
 Template dest is file, no output expected:
 File from previous test has output: OK
 Template dest can be overwritten: STILL OK
-Source and dest can't be the same, error expected: sempl: '/tmp/sempl.test' and '/tmp/sempl.test' are the same file at ./bin/sempl line 33.
+Source and dest can't be the same, error expected: sempl: '/tmp/sempl.test' and '/tmp/sempl.test' are the same file
 Test $SEMPL_BRACES: OK
 Test $LB: {$check}
 Test $RB: {$check}
