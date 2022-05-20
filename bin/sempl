@@ -55,17 +55,24 @@ if ($line =~ /^#!.*$prog/) {
 			last;
 		} elsif ($line =~ /^#/) {
 			next;
+		} elsif ($line =~ /^\s*($re_ident)\s*=\s*(\$?'.*')\s*$/) {
+			my $key = $1;
+			my $value = $2;
+			$value =~ s/'/'\\''/g;
+			$value = `bash -c '$key=$value\necho -n "\$$key"'` or die $!;
+			$ENV{$key} = $value;
+		} elsif ($line =~ /^\s*($re_ident)\s*=\s*(\$?".*")\s*$/) {
+			my $key = $1;
+			my $value = $2;
+			$value =~ s/'/'\\''/g;
+			$value = `bash -c '$key=$value\necho -n "\$$key"'` or die $!;
+			$ENV{$key} = $value;
 		} elsif ($line =~ /^\s*($re_ident)\s*=\s*(.*)\s*$/) {
 			my $key = $1;
 			my $value = $2;
-			if ($value =~ /^'(.*)'$/) {
-				$value = $1;
-				$value =~ s/'\\''/'/g;
-			}
 			$ENV{$key} = $value;
-			next;
 		} else {
-			warn "Invalid line in frontmatter: \n\t$line\n";
+			die "Invalid line in frontmatter: \n\t$line\n";
 		}
 	}
 }

@@ -1,12 +1,37 @@
 #!/usr/bin/env sempl
 # test sempl language features
 SEMPL_BRACES={{}}
+literal = `a` \'literal'    $string "with"$((0))ut $(expansion)
+mismatched = 'don't start what you can't finish"
+singlequote = '	leading and trailing whitespace '
+var = value
+doublequote = "A $var, a $(echo command), SOME M$((2*2))$((3+4))H"
+lines = $'one line\nanother line'
+tr = $"translation string"
 #!end sempl env
 
 # many language features are tested by the readme,
 # so i haven't bothered including them here yet
 #
 # TODO: parameters, frontmatter, continuation, line interpolation, etc.
+
+Check literal value in frontmatter
+{$literal}: =>{{$literal}}<=
+
+Check 'value" with mismatched quotes in frontmatter
+{$mismatched}: =>{{$mismatched}}<=
+
+Check single-quoted "value" in frontmatter
+{$singlequote}: =>{{$singlequote}}<=
+
+Check double-quoted "value" in frontmatter
+{$doublequote}: =>{{$doublequote}}<=
+
+Check ansi-escaped $'value' in frontmatter
+{$lines}: =>{{$lines}}<=
+
+Check translation $"string" in frontmatter
+{$tr}: =>{{$tr}}<=
 
 Check field ranges
 {<./madlibs.dat} {:2} {4:5} {7} {9:}: =>{{<./madlibs.dat}}{{:2}} {{4:5}} {{7}} {{9:}}<=

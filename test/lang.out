@@ -5,6 +5,25 @@ sempl: Unset environment variable: $unset_variable
 #
 # TODO: parameters, frontmatter, continuation, line interpolation, etc.
 
+Check literal value in frontmatter
+{$literal}: =>`a` \'literal'    $string "with"$((0))ut $(expansion)<=
+
+Check 'value" with mismatched quotes in frontmatter
+{$mismatched}: =>'don't start what you can't finish"<=
+
+Check single-quoted "value" in frontmatter
+{$singlequote}: =>	leading and trailing whitespace <=
+
+Check double-quoted "value" in frontmatter
+{$doublequote}: =>A value, a command, SOME M47H<=
+
+Check ansi-escaped $'value' in frontmatter
+{$lines}: =>one line<=
+{$lines}: =>another line<=
+
+Check translation $"string" in frontmatter
+{$tr}: =>translation string<=
+
 Check field ranges
 {<./madlibs.dat} {:2} {4:5} {7} {9:}: =>little cat big dog a for it<=
 {<./madlibs.dat} {:2} {4:5} {7} {9:}: =>fast dog slow cat it <=
@@ -30,9 +49,9 @@ Check missing variable
   Note: error message will appear at beginning of test output
 
 Check missing files
-bash: line 40: /nonexistent/file: No such file or directory
-bash: line 43: ./nonexistent/file: No such file or directory
+bash: line 70: /nonexistent/file: No such file or directory
+bash: line 73: ./nonexistent/file: No such file or directory
 
 Check missing command
-bash: line 46: command-not-found: command not found
+bash: line 76: command-not-found: command not found
 

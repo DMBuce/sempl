@@ -1,9 +1,6 @@
 #!/usr/bin/env sempl
 SEMPL_BRACES='<>'
 var = value
-var1='value'
-var2='this value's got a quote in the middle'
-var3='escaped quotes aren'\\''t pretty, but they'\\''re possible'
 bar='==='
 #!end sempl env
 
@@ -132,17 +129,12 @@ The above example exports `value` to the `$var` environment variable.
 The template can then reference it with `{$var}` or in commands with
 e.g. `{!command $var}`.
 
-To ease copying and pasting between shell scripts, you can wrap the
-value in single quotes. Unlike in shell, quotes in the middle of
-unquoted values are interpreted literally.
+If a value is quoted, it's interpreted by bash.
 
- var1='<$var1>'
- var2='<$var2>'
-
-Quotes in quoted strings can be escaped in a way that the shell will
-understand.
-
- var3='<$var3>'
+ var1 = '	leading and trailing whitespace '
+ var2 = "A $var, a $(command), some math: $((1+2))"
+ var3 = $'one line\nanother line'
+ var4 = $"a translation string"
 
 === Continuation
 
