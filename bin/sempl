@@ -7,7 +7,7 @@ use File::Temp qw/ tempdir /;
 
 # define some vars
 my $prog = (split(/\//, $0))[-1];
-my $usage = "Syntax: $prog [SRC] [DEST]\n";
+my $usage = "Usage: $prog [SRC] [DEST]\n";
 
 # export default env vars
 $ENV{SEMPL_BRACES} ||= "{}";
