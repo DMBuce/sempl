@@ -257,7 +257,7 @@ which can be useful for things like loops and flow control.
 For example,
 
  {% for i in foo bar baz; do }{\\}
- {%   if [[ $i != f* ]]; then }{\\}
+ {%   if [[ $i == b* ]]; then }{\\}
  ~ {$i}
  {%   fi }{\\}
  {% done }{\\}
