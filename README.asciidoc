@@ -256,14 +256,16 @@ you can use raw shell statements,
 which can be useful for things like loops and flow control.
 For example,
 
- {% for i in foo bar; do }{\\}
+ {% for i in foo bar baz; do }{\\}
+ {%   if [[ $i != f* ]]; then }{\\}
  ~ {$i}
+ {%   fi }{\\}
  {% done }{\\}
 
 renders as
 
- ~ foo
  ~ bar
+ ~ baz
 
 === Braces: {{}} </> [] @@ …
 
