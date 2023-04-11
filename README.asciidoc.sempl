@@ -1,4 +1,5 @@
 #!/usr/bin/env sempl
+SEMPL_EXPERIMENTAL=1
 SEMPL_BRACES='<>'
 var = value
 bar='==='
@@ -228,6 +229,23 @@ respectively render as
 and
 
  <$SHELL>> <<!echo -e 'a\nb\nc' | cat -n | join - <(cat -n hello.txt)><2:>
+
+=== Raw Shell Statements: {%raw}
+
+If you set environment variable `SEMPL_EXPERIMENTAL=1`,
+you can use raw shell statements,
+which can be useful for things like loops and flow control.
+For example,
+
+ {% for i in foo bar; do }{\\}
+ - {$i}
+ {% done }{\\}
+
+renders as
+
+<% for i in foo bar; do ><\\>
+ - <$i>
+<% done ><\\>
 
 === Braces: {{}} <$LB>/> [] @@ …
 

@@ -249,6 +249,22 @@ and
  /bin/bash> a Hello world,
  /bin/bash> b how are you?
 
+=== Raw Shell Statements: {%raw}
+
+If you set environment variable `SEMPL_EXPERIMENTAL=1`,
+you can use raw shell statements,
+which can be useful for things like loops and flow control.
+For example,
+
+ {% for i in foo bar; do }{\\}
+ - {$i}
+ {% done }{\\}
+
+renders as
+
+ - foo
+ - bar
+
 === Braces: {{}} </> [] @@ …
 
 If your template contains curly braces, you can set the `$SEMPL_BRACES`
