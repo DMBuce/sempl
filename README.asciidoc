@@ -257,13 +257,13 @@ which can be useful for things like loops and flow control.
 For example,
 
  {% for i in foo bar; do }{\\}
- - {$i}
+ ~ {$i}
  {% done }{\\}
 
 renders as
 
- - foo
- - bar
+ ~ foo
+ ~ bar
 
 === Braces: {{}} </> [] @@ …
 
@@ -357,6 +357,10 @@ Normally, Sempl works by generating and running a shell script to
 produce output. If `$SEMPL_DUMP` is set to anything other than "0" or
 "", Sempl will instead write the shell script to DEST.sh without running
 it.
+
+**$SEMPL_DUMP**::
+
+Enables experimental features when set to `1`.
 
 **$TMPDIR**::
 
