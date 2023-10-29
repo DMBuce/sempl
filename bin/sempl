@@ -44,6 +44,8 @@ if ($src =~ /\Q$ENV{LB}\E(.+?)\Q$ENV{RB}\E/) {
 }
 
 # process frontmatter
+$ENV{DEST} = $dest;
+$ENV{SRC} = $src;
 my $re_ident = "[a-zA-Z_][a-zA-Z0-9_]*?";
 my $line = <$in> || "";
 if ($line =~ /^#!.*$prog/) {
